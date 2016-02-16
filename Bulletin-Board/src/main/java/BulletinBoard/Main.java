@@ -14,6 +14,10 @@ public class Main {
         while (resultSet.next()) {
             System.out.println(resultSet.getString("nimi"));
         }
+        
+        statement.close();
+        resultSet.close();
+        connection.close();
     }
 
 }
