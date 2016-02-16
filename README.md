@@ -1,8 +1,7 @@
 # Bulletin-Board
 Tietokantojen perusteet -kurssin ryhmätyö.
 
-http://github.com/hexparvi
-
-http://github.com/pzanni
-
-http://github.com/leppaott/
+Collaborators:
+http://github.com/hexparvi<br/>
+http://github.com/pzanni<br/>
+http://github.com/leppaott/<br/>
