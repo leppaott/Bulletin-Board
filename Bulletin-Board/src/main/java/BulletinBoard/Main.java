@@ -1,23 +1,22 @@
 package BulletinBoard;
 
-import java.sql.*;
+import Domain.SubforumDao;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        Connection connection = DriverManager.getConnection("jdbc:sqlite:tietokanta.db");
-        
-        Statement statement = connection.createStatement();
 
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM ALUE;");
+        Database database = new Database("jdbc:sqlite:tietokanta.db");
+        List<String> subforums = database.queryAndCollect("SELECT * FROM ALUE",
+                rs -> rs.getString("nimi"));
 
-        while (resultSet.next()) {
-            System.out.println(resultSet.getString("nimi"));
+        for (String subforum : subforums) {
+            System.out.println(subforum);
         }
         
-        statement.close();
-        resultSet.close();
-        connection.close();
+        new SubforumDao(database).findOne(1);
+
     }
 
 }
