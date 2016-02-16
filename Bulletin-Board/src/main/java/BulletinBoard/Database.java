@@ -48,7 +48,7 @@ public class Database {
     }
 
     public int update(String updateQuery, Object... params) throws SQLException {
-        int changes;
+        int changes = 0;
         try (PreparedStatement stmt = connection.prepareStatement(updateQuery)) {
             for (int i = 0; i < params.length; i++) {
                 stmt.setObject(i + 1, params[i]);
