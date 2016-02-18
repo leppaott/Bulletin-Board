@@ -1,6 +1,8 @@
-package Domain;
+package Dao;
 
 import BulletinBoard.Database;
+import Domain.Dao;
+import Domain.Subforum;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;

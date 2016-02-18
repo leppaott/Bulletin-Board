@@ -1,8 +1,8 @@
 package BulletinBoard;
 
 import Domain.Subforum;
-import Domain.SubforumDao;
-import Domain.ThreadDao;
+import Dao.SubforumDao;
+import Dao.ThreadDao;
 import Domain.Thread;
 
 public class Main {
