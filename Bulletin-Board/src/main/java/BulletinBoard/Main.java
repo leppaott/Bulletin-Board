@@ -8,14 +8,16 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         Database database = new Database("jdbc:sqlite:tietokanta.db");
-        List<String> subforums = database.queryAndCollect("SELECT * FROM ALUE",
-                rs -> rs.getString("nimi"));
+        //database.setDebugMode(true);
+        
+        List<String> subforums = database.queryAndCollect("SELECT * FROM Subforum;",
+                rs -> rs.getString("name"));
 
         for (String subforum : subforums) {
             System.out.println(subforum);
         }
         
-        new SubforumDao(database).findOne(1);
+        System.out.println(new SubforumDao(database).findOne(1).getName());
 
     }
 
