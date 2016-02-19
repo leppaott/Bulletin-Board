@@ -35,7 +35,7 @@ public class ThreadDao implements Dao<Thread, Integer> {
                             null, //handle finding sender:User
                             null, //handle lastMessage:Message
                             rs.getString("name"),
-                            null); //handle dateTime:LocalDateTime/DateTime
+                            rs.getTimestamp("dateTime"));
                 }, forumId);
     }
 

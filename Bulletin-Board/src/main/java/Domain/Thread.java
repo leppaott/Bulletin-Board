@@ -1,6 +1,6 @@
 package Domain;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 public class Thread {
 
@@ -9,10 +9,10 @@ public class Thread {
     private User sender;
     private Message lastMessage;
     private String name;
-    private LocalDateTime dateTime; //not sure about type.. 
+    private Timestamp dateTime;
 
     public Thread(int threadId, int forumId, User sender, Message lastMessage,
-            String name, LocalDateTime dateTime) {
+            String name, Timestamp dateTime) {
         this.threadId = threadId;
         this.forumId = forumId;
         this.sender = sender;
@@ -41,7 +41,7 @@ public class Thread {
         return name;
     }
 
-    public LocalDateTime getDateTime() {
+    public Timestamp getDateTime() {
         return dateTime;
     }
 

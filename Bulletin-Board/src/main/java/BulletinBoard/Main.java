@@ -4,6 +4,8 @@ import Domain.Subforum;
 import Dao.SubforumDao;
 import Dao.ThreadDao;
 import Domain.Thread;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -17,7 +19,7 @@ public class Main {
         for (Subforum forum : subforums.findAll()) {
             System.out.println(forum.getName());
         }
-
+        
         System.out.println();
         
         ThreadDao threads = new ThreadDao(database);

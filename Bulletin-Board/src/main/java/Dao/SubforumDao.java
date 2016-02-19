@@ -26,7 +26,7 @@ public class SubforumDao implements Dao<Subforum, Integer> {
                     );
                 }, key);
 
-        return row.get(0);
+        return !row.isEmpty() ? row.get(0) : null;
     }
 
     @Override
