@@ -17,8 +17,8 @@ public class UserDao implements Dao<User, Integer> {
 
     @Override
     public User findOne(Integer key) throws SQLException {
-                List<User> row = database.queryAndCollect(
-                "SELECT * FROM Subforum WHERE forumId = ?;", rs -> {
+        List<User> row = database.queryAndCollect(
+                "SELECT * FROM User WHERE userId = ?;", rs -> {
                     return new User(
                             rs.getInt("userId"),
                             rs.getString("username"),
