@@ -1,14 +1,11 @@
 package Dao;
 
 import BulletinBoard.Database;
-import Domain.Dao;
 import Domain.Message;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-public class MessageDao implements Dao<Message, Integer> {
+public class MessageDao {
 
     private final Database database;
 
@@ -16,8 +13,7 @@ public class MessageDao implements Dao<Message, Integer> {
         this.database = database;
     }
 
-    @Override
-    public Message findOne(Integer key) throws SQLException {
+    public Message findOne(int messageId) throws SQLException {
         List<Message> row = database.queryAndCollect(
                 "SELECT * FROM Message WHERE messageId = ?;", rs -> {
                     return new Message(
@@ -28,12 +24,11 @@ public class MessageDao implements Dao<Message, Integer> {
                             rs.getTimestamp("dateTime"),
                             rs.getString("content")
                     );
-                }, key);
+                }, messageId);
 
         return !row.isEmpty() ? row.get(0) : null;
     }
 
-    @Override
     public List<Message> findAll() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -51,15 +46,4 @@ public class MessageDao implements Dao<Message, Integer> {
                             rs.getString("content"));
                 }, threadId);
     }
-
-    @Override
-    public List<Message> findAllIn(Collection<Integer> keys) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

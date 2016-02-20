@@ -1,13 +1,11 @@
 package Dao;
 
 import BulletinBoard.Database;
-import Domain.Dao;
 import Domain.Thread;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
-public class ThreadDao implements Dao<Thread, Integer> {
+public class ThreadDao {
 
     private final Database database;
 
@@ -15,12 +13,10 @@ public class ThreadDao implements Dao<Thread, Integer> {
         this.database = database;
     }
 
-    @Override
     public Thread findOne(Integer key) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
     public List<Thread> findAll() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -38,15 +34,4 @@ public class ThreadDao implements Dao<Thread, Integer> {
                             rs.getTimestamp("dateTime"));
                 }, forumId);
     }
-
-    @Override
-    public List<Thread> findAllIn(Collection<Integer> keys) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

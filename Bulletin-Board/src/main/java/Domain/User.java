@@ -5,9 +5,9 @@ import java.sql.Timestamp;
 public class User {
 
     private final int userId;
-    private String username;
-    private Timestamp joinDate;
-    int postcount;
+    private final String username;
+    private final Timestamp joinDate;
+    private int postcount;
 
     public User(int userId, String username, Timestamp joinDate, int postcount) {
         this.userId = userId;

@@ -4,8 +4,6 @@ import Domain.Subforum;
 import Dao.SubforumDao;
 import Dao.ThreadDao;
 import Domain.Thread;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 
@@ -27,7 +25,5 @@ public class Main {
         for (Thread thread : threads.findAllIn(subforums.findAll().get(0).getForumId())) {
             System.out.println(thread.getName());
         }
-
     }
-
 }

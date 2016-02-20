@@ -1,13 +1,11 @@
 package Dao;
 
 import BulletinBoard.Database;
-import Domain.Dao;
 import Domain.Subforum;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
-public class SubforumDao implements Dao<Subforum, Integer> {
+public class SubforumDao {
 
     private final Database database;
 
@@ -15,8 +13,7 @@ public class SubforumDao implements Dao<Subforum, Integer> {
         this.database = database;
     }
 
-    @Override
-    public Subforum findOne(Integer key) throws SQLException {
+    public Subforum findOne(int forumId) throws SQLException {
         List<Subforum> row = database.queryAndCollect(
                 "SELECT * FROM Subforum WHERE forumId = ?;", rs -> {
                     return new Subforum(
@@ -24,12 +21,11 @@ public class SubforumDao implements Dao<Subforum, Integer> {
                             rs.getString("name"),
                             rs.getInt("postcount")
                     );
-                }, key);
+                }, forumId);
 
         return !row.isEmpty() ? row.get(0) : null;
     }
 
-    @Override
     public List<Subforum> findAll() throws SQLException {
         return database.queryAndCollect("SELECT * FROM Subforum;", rs -> {
             return new Subforum(
@@ -37,15 +33,5 @@ public class SubforumDao implements Dao<Subforum, Integer> {
                     rs.getString("name"),
                     rs.getInt("postcount"));
         });
-    }
-
-    @Override
-    public List<Subforum> findAllIn(Collection<Integer> keys) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

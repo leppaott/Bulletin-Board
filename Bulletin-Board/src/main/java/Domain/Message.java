@@ -5,9 +5,9 @@ import java.sql.Timestamp;
 public class Message {
 
     private final int messageId;
-    private Thread threadId;
-    private User sender;
-    private int order;
+    private final Thread threadId;
+    private final User sender;
+    private final int order;
     private Timestamp dateTime;
     private String content;
 

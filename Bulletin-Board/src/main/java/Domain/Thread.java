@@ -6,7 +6,7 @@ public class Thread {
 
     private final int threadId;
     private final int forumId;
-    private User sender;
+    private final User sender;
     private Message lastMessage;
     private String name;
     private Timestamp dateTime;
