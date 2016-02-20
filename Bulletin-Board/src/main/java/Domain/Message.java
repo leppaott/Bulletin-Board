@@ -10,7 +10,7 @@ public class Message {
     private final int order;
     private Timestamp dateTime;
     private String content;
-
+    
     public Message(int messageId, Thread threadId, User sender, int order, Timestamp dateTime, String content) {
         this.messageId = messageId;
         this.threadId = threadId;
