@@ -70,6 +70,7 @@ public class Database {
                 System.out.println("---");
             }
         }
+        
         return rs;
     }
 
@@ -102,9 +103,5 @@ public class Database {
         }
 
         System.out.println();
-    }
-
-    public Connection getConnection() throws SQLException {
-        return connection;
     }
 }
