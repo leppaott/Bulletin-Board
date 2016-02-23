@@ -41,7 +41,42 @@ public class MessageDao {
     }
 
     public List<Message> findAll() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Message> messages = new ArrayList<>();
+        Map<Integer, List<Message>> threadRefs = new HashMap<>();
+        Map<Integer, List<Message>> senderRefs = new HashMap<>();
+
+        try (ResultSet rs = database.query("SELECT * FROM Message;")) {
+            while (rs.next()) {
+                int id = rs.getInt("messageId");
+                int thread = rs.getInt("threadId");
+                int sender = rs.getInt("sender");
+                int order = rs.getInt("order");
+                Timestamp date = rs.getTimestamp("dateTime");
+                String content = rs.getString("content");
+
+                Message msg = new Message(id, order, date, content);
+                messages.add(msg);
+
+                threadRefs.putIfAbsent(thread, new ArrayList<>());
+                threadRefs.get(thread).add(msg);
+                senderRefs.putIfAbsent(sender, new ArrayList<>());
+                senderRefs.get(sender).add(msg);
+            }
+        }
+
+        for (Thread thread : threadDao.findAllIn(threadRefs.keySet())) {
+            for (Message message : threadRefs.get(thread.getThreadId())) {
+                message.setThread(thread);
+            }
+        }
+
+        for (User user : userDao.findAllIn(senderRefs.keySet())) {
+            for (Message message : senderRefs.get(user.getUserId())) {
+                message.setSender(user);
+            }
+        }
+
+        return messages;
     }
 
     public List<Message> findAllIn(int threadId) throws SQLException {
@@ -57,10 +92,10 @@ public class MessageDao {
                 int order = rs.getInt("order");
                 Timestamp date = rs.getTimestamp("dateTime");
                 String content = rs.getString("content");
-                
+
                 Message msg = new Message(id, order, date, content);
                 messages.add(msg);
-                
+
                 threadRefs.putIfAbsent(thread, new ArrayList<>());
                 threadRefs.get(thread).add(msg);
                 senderRefs.putIfAbsent(sender, new ArrayList<>());
@@ -68,10 +103,9 @@ public class MessageDao {
             }
         }
 
-        for (Thread thread : threadDao.findAllIn(threadRefs.keySet())) {
-            for (Message message : threadRefs.get(thread.getThreadId())) {
-                message.setThread(thread);
-            }
+        Thread thread = threadDao.findOne(threadId);
+        for (Message message : messages) {
+            message.setThread(thread);
         }
 
         for (User user : userDao.findAllIn(senderRefs.keySet())) {
