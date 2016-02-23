@@ -5,22 +5,19 @@ import java.sql.Timestamp;
 public class Message {
 
     private final int messageId;
-    private Thread threadId;
+    private Thread thread;
     private User sender;
     private final int order;
     private Timestamp dateTime;
     private String content;
 
     public Message(int messageId, int order, Timestamp dateTime, String content) {
-        this.messageId = messageId;
-        this.order = order;
-        this.dateTime = dateTime;
-        this.content = content;
+        this(messageId, null, null, order, dateTime, content);
     }
 
-    public Message(int messageId, Thread threadId, User sender, int order, Timestamp dateTime, String content) {
+    public Message(int messageId, Thread thread, User sender, int order, Timestamp dateTime, String content) {
         this.messageId = messageId;
-        this.threadId = threadId;
+        this.thread = thread;
         this.sender = sender;
         this.order = order;
         this.dateTime = dateTime;
@@ -31,8 +28,8 @@ public class Message {
         return messageId;
     }
 
-    public Thread getThreadId() {
-        return threadId;
+    public Thread getThread() {
+        return thread;
     }
 
     public User getSender() {
@@ -52,7 +49,7 @@ public class Message {
     }
     
     public void setThread(Thread thread) {
-        this.threadId = thread;
+        this.thread = thread;
     }
     
     public void setSender(User user) {

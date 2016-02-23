@@ -3,8 +3,8 @@ package Dao;
 import BulletinBoard.Database;
 import Domain.Thread;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class ThreadDao {
 
@@ -22,7 +22,7 @@ public class ThreadDao {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public List<Thread> findAllIn(Set<Integer> keys) throws SQLException {
+    public List<Thread> findAllIn(Collection<Integer> keys) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

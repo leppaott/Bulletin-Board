@@ -47,6 +47,32 @@ public class Database {
         return rows;
     }
 
+    public ResultSet query(String query, Object... params) throws SQLException {
+        ResultSet rs;
+        
+        if (debug) {
+            System.out.println("---");
+            System.out.println("Executing: " + query);
+            System.out.println("---");
+        }
+       
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+
+            rs = stmt.executeQuery();
+            
+            if (debug) {
+                System.out.println("---");
+                System.out.println(query);
+                debug(rs);
+                System.out.println("---");
+            }
+        }
+        return rs;
+    }
+
     public int update(String updateQuery, Object... params) throws SQLException {
         int changes;
         try (PreparedStatement stmt = connection.prepareStatement(updateQuery)) {

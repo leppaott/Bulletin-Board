@@ -22,9 +22,9 @@ public class TextInterface {
         //this.database.setDebugMode(true);   
 
         subforums = new SubforumDao(database);
-        threads = new ThreadDao(database);
+        threads = new ThreadDao(database); 
         messages = new MessageDao(database);
-        users = new UserDao(database);
+        users = new UserDao(database); 
     }
 
     private void listSubforums() throws SQLException {
@@ -40,6 +40,7 @@ public class TextInterface {
     public void start() throws SQLException {
         listSubforums();
         System.out.println();
+        
 //        for (Thread thread : threads.findAllIn(subforums.findAll().get(0).getForumId())) {
 //            System.out.println(thread.getName());
 //        }

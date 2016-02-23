@@ -3,8 +3,8 @@ package Dao;
 import BulletinBoard.Database;
 import Domain.User;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class UserDao {
 
@@ -32,7 +32,7 @@ public class UserDao {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public List<User> findAllIn(Set<Integer> keys) throws SQLException {
+    public List<User> findAllIn(Collection<Integer> keys) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
