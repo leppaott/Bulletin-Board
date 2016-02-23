@@ -81,7 +81,6 @@ public class MessageDao {
 
     public List<Message> findAllIn(int threadId) throws SQLException {
         List<Message> messages = new ArrayList<>();
-        Map<Integer, List<Message>> threadRefs = new HashMap<>();
         Map<Integer, List<Message>> senderRefs = new HashMap<>();
 
         try (ResultSet rs = database.query("SELECT * FROM Message WHERE threadId = ?;", threadId)) {
@@ -96,8 +95,6 @@ public class MessageDao {
                 Message msg = new Message(id, order, date, content);
                 messages.add(msg);
 
-                threadRefs.putIfAbsent(thread, new ArrayList<>());
-                threadRefs.get(thread).add(msg);
                 senderRefs.putIfAbsent(sender, new ArrayList<>());
                 senderRefs.get(sender).add(msg);
             }
