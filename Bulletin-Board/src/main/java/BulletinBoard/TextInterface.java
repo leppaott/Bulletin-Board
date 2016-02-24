@@ -8,6 +8,7 @@ import Domain.Message;
 import Domain.Subforum;
 import Domain.Thread;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class TextInterface {
 
@@ -22,10 +23,10 @@ public class TextInterface {
         //this.database.setDebugMode(true);   
 
         subforums = new SubforumDao(database);
-        threads = new ThreadDao(database); 
+        threads = new ThreadDao(database);
         messages = new MessageDao(database);
-        users = new UserDao(database); 
-        
+        users = new UserDao(database);
+
         threads.setDaos(users, messages, subforums);
         messages.setDaos(threads, users);
     }
@@ -33,7 +34,7 @@ public class TextInterface {
     private void listSubforums() throws SQLException {
         System.out.println("Alue\t\tViestejä yhteensä\tViimeisin Viesti");
         for (Subforum forum : subforums.findAll()) {
-            Message lastMessage = messages.findLastMessage(forum.getForumId());
+            Message lastMessage = messages.findLastMessageForForum(forum.getForumId());
             System.out.println(forum.getName() + "\t" + forum.getPostcount()
                     + "\t\t\t" + (lastMessage != null ? lastMessage.getDateTime() : ""));
         }
@@ -42,10 +43,5 @@ public class TextInterface {
 
     public void start() throws SQLException {
         listSubforums();
-        System.out.println();
-        
-//        for (Thread thread : threads.findAllIn(subforums.findAll().get(0).getForumId())) {
-//            System.out.println(thread.getName());
-//        }
     }
 }

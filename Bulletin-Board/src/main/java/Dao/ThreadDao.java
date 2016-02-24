@@ -34,7 +34,15 @@ public class ThreadDao {
         this.forumDao = forumDao;
     }
 
-    public Thread findOne(int threadId) throws SQLException {
+    /**
+     * Remember to set lastMessage with 
+     * thread.setLastMessage(messageDao.findLastMessageForThread(thread.getThreadId()))
+     * @param forumId
+     * @return
+     * @throws SQLException 
+     */
+    
+    public Thread findOne(int forumId) throws SQLException {
         List<Thread> row = database.queryAndCollect(
                 "SELECT * FROM Thread WHERE forumId = ?;",
                 rs -> {
@@ -42,10 +50,10 @@ public class ThreadDao {
                             rs.getInt("threadId"),
                             forumDao.findOne(rs.getInt("forumId")),
                             userDao.findOne(rs.getInt("sender")),
-                            messageDao.findOne(rs.getInt("lastMessage")),
+                            null,//messageDao.findOne(rs.getInt("lastMessage")),
                             rs.getString("name"),
-                            rs.getTimestamp("dateTime"));
-                }, threadId);
+                            new Timestamp(rs.getLong("dateTime")));
+                }, forumId);
         
          return !row.isEmpty() ? row.get(0) : null;
     }
@@ -55,7 +63,7 @@ public class ThreadDao {
     }
 
     public List<Thread> findAllIn(Collection<Integer> keys) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new ArrayList<>();
     }
 
     public List<Thread> findAllIn(int forumId) throws SQLException {
@@ -70,7 +78,7 @@ public class ThreadDao {
                 int id = rs.getInt("threadId");
                 int sender = rs.getInt("sender");
                 int lastMessage = rs.getInt("lastMessage");
-                Timestamp date = rs.getTimestamp("dateTime");
+                Timestamp date = new Timestamp(rs.getLong("dateTime"));
                 String name = rs.getString("name");
 
                 Thread thread = new Thread(id, forum, name, date);

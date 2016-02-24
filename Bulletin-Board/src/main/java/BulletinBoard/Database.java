@@ -3,14 +3,19 @@ package BulletinBoard;
 import Domain.Collector;
 import java.sql.*;
 import java.util.*;
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetFactory;
+import javax.sql.rowset.RowSetProvider;
 
 public class Database {
 
     private boolean debug;
     private Connection connection;
+    private RowSetFactory factory;
 
     public Database(String address) throws Exception {
         this.connection = DriverManager.getConnection(address);
+        this.factory = RowSetProvider.newFactory();
     }
 
     public Connection getConnection() {
@@ -21,8 +26,8 @@ public class Database {
         debug = d;
     }
 
-    public ResultSet query(String query, Object... params) throws SQLException {
-        ResultSet rs;
+    public CachedRowSet query(String query, Object... params) throws SQLException {
+        CachedRowSet crs = factory.createCachedRowSet();
 
         if (debug) {
             System.out.println("---");
@@ -34,15 +39,18 @@ public class Database {
             int i = 1;
             for (Object object : params) {
                 if (object instanceof Collection) { //perhaps better way...
+                    int j = 1;
                     for (Object obj : (Collection) object) {
-                        stmt.setObject(i++, params[i]);
+                        stmt.setObject(j++, obj);
                     }
                 } else {
-                    stmt.setObject(i++, params[i]);
+                    stmt.setObject(i, object);
                 }
+                i++;
             }
 
-            rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
+            crs.populate(rs);
 
             if (debug) {
                 System.out.println("---");
@@ -52,7 +60,7 @@ public class Database {
             }
         }
 
-        return rs;
+        return crs;
     }
 
     //use query to do

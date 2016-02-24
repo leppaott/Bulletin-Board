@@ -3,6 +3,8 @@ package Dao;
 import BulletinBoard.Database;
 import Domain.User;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class UserDao {
                     return new User(
                             rs.getInt("userId"),
                             rs.getString("username"),
-                            rs.getTimestamp("joinDate"),
+                            new Timestamp(rs.getLong("joinDate")),
                             rs.getInt("postcount")
                     );
                 }, userId);
@@ -33,6 +35,6 @@ public class UserDao {
     }
 
     public List<User> findAllIn(Collection<Integer> keys) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new ArrayList<>();
     }
 }

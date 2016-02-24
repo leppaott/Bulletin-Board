@@ -36,7 +36,7 @@ public class MessageDao {
                             threadDao.findOne(rs.getInt("threadId")),
                             userDao.findOne(rs.getInt("sender")),
                             rs.getInt("order"),
-                            rs.getTimestamp("dateTime"),
+                            new Timestamp(rs.getLong("dateTime")),
                             rs.getString("content")
                     );
                 }, messageId);
@@ -55,12 +55,12 @@ public class MessageDao {
                 int thread = rs.getInt("threadId");
                 int sender = rs.getInt("sender");
                 int order = rs.getInt("order");
-                Timestamp date = rs.getTimestamp("dateTime");
+                Timestamp date = new Timestamp(rs.getLong("dateTime"));
                 String content = rs.getString("content");
 
                 Message msg = new Message(id, null, null, order, date, content);
                 messages.add(msg);
-
+                
                 threadRefs.putIfAbsent(thread, new ArrayList<>());
                 threadRefs.get(thread).add(msg);
                 senderRefs.putIfAbsent(sender, new ArrayList<>());
@@ -94,7 +94,7 @@ public class MessageDao {
                 int id = rs.getInt("messageId");
                 int sender = rs.getInt("sender");
                 int order = rs.getInt("order");
-                Timestamp date = rs.getTimestamp("dateTime");
+                Timestamp date = new Timestamp(rs.getLong("dateTime"));
                 String content = rs.getString("content");
 
                 Message msg = new Message(id, thread, null, order, date, content);
@@ -129,14 +129,14 @@ public class MessageDao {
                             threadDao.findOne(rs.getInt("threadId")), //TODO perhaps
                             userDao.findOne(rs.getInt("sender")),   //TODO
                             rs.getInt("order"),
-                            rs.getTimestamp("dateTime"),
+                            new Timestamp(rs.getLong("dateTime")),
                             rs.getString("content")));
             }
         }
         return messages;
     }
 
-    public Message findLastMessage(int forumId) throws SQLException {
+    public Message findLastMessageForForum(int forumId) throws SQLException {
         List<Message> row = database.queryAndCollect(
                 "SELECT * FROM Message m, Thread t WHERE t.forumId = ? "
                 + "AND t.lastMessage = m.messageId "
@@ -150,6 +150,23 @@ public class MessageDao {
                             rs.getTimestamp("dateTime"),
                             rs.getString("content"));
                 }, forumId);
+
+        return !row.isEmpty() ? row.get(0) : null;
+    }
+    
+    public Message findLastMessageForThread(int threadId) throws SQLException {
+        List<Message> row = database.queryAndCollect(
+                "SELECT * FROM Message m, Thread t WHERE t.threadId = ? "
+                + "AND t.lastMessage = m.messageId;",
+                rs -> {
+                    return new Message(
+                            rs.getInt("messageId"),
+                            threadDao.findOne(rs.getInt("threadId")),
+                            userDao.findOne(rs.getInt("sender")),
+                            rs.getInt("order"),
+                            rs.getTimestamp("dateTime"),
+                            rs.getString("content"));
+                }, threadId);
 
         return !row.isEmpty() ? row.get(0) : null;
     }
