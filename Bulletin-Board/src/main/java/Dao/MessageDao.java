@@ -12,18 +12,20 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.sqlite.util.StringUtils;
 
 public class MessageDao {
 
     private final Database database;
-    private final ThreadDao threadDao;
-    private final UserDao userDao;
+    private ThreadDao threadDao;
+    private UserDao userDao;
 
     public MessageDao(Database database) {
         this.database = database;
-        threadDao = new ThreadDao(database); //Unnecessary objects, could set in setter
-        userDao = new UserDao(database);
+    }
+    
+    public void setDaos(ThreadDao threadDao, UserDao userDao) {
+        this.threadDao = threadDao;
+        this.userDao = userDao;
     }
 
     public Message findOne(int messageId) throws SQLException {
@@ -113,10 +115,6 @@ public class MessageDao {
     }
 
     public List<Message> findAllIn(Collection<Integer> keys) throws SQLException {
-        if (keys.isEmpty()) {
-            return new ArrayList<>();
-        }
-
         List<Message> messages = new ArrayList<>();
         
         StringBuilder params = new StringBuilder("?");

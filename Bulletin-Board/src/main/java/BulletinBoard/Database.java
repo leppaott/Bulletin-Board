@@ -16,25 +16,32 @@ public class Database {
     public Connection getConnection() {
         return connection;
     }
-    
+
     public void setDebugMode(boolean d) {
         debug = d;
     }
 
     public ResultSet query(String query, Object... params) throws SQLException {
         ResultSet rs;
-        
+
         if (debug) {
             System.out.println("---");
             System.out.println("Executing: " + query);
             System.out.println("---");
         }
-       
+
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            for (int i = 0; i < params.length; i++) {
-                stmt.setObject(i + 1, params[i]);
+            int i = 1;
+            for (Object object : params) {
+                if (object instanceof Collection) { //perhaps better way...
+                    for (Object obj : (Collection) object) {
+                        stmt.setObject(i++, params[i]);
+                    }
+                } else {
+                    stmt.setObject(i++, params[i]);
+                }
             }
- 
+
             rs = stmt.executeQuery();
 
             if (debug) {
@@ -44,38 +51,10 @@ public class Database {
                 System.out.println("---");
             }
         }
-        
+
         return rs;
     }
-    //TODO
-    public ResultSet query(String query, Collection<Integer> keys) throws SQLException {
-        ResultSet rs; 
-       
-        if (debug) {
-            System.out.println("---");
-            System.out.println("Executing: " + query);
-            System.out.println("---");
-        }
-        
-        try (PreparedStatement stmt = connection.prepareStatement(query)) { 
-            int i = 1;
-            for (Integer key : keys) {
-                stmt.setObject(i++, key);
-            }
-            //stmt.setArray(1, null);?
-            rs = stmt.executeQuery();
-            
-            if (debug) {
-                System.out.println("---");
-                System.out.println(query);
-                debug(rs);
-                System.out.println("---");
-            }
-        }
-        
-        return rs;
-    }
-    
+
     //use query to do
     public <T> List<T> queryAndCollect(String query, Collector<T> col, Object... params) throws SQLException {
         if (debug) {

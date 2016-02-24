@@ -17,15 +17,21 @@ import java.util.Map;
 public class ThreadDao {
 
     private final Database database;
-    private final UserDao userDao;
-    private final MessageDao messageDao;
-    private final SubforumDao forumDao;
+    private UserDao userDao;
+    private MessageDao messageDao;
+    private SubforumDao forumDao;
 
     public ThreadDao(Database database) {
         this.database = database;
         userDao = new UserDao(database);
         messageDao = new MessageDao(database);
         forumDao = new SubforumDao(database); 
+    }
+    
+    public void setDaos(UserDao userDao, MessageDao messageDao, SubforumDao forumDao) {
+        this.userDao = userDao;
+        this.messageDao = messageDao;
+        this.forumDao = forumDao;
     }
 
     public Thread findOne(int threadId) throws SQLException {

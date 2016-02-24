@@ -25,6 +25,9 @@ public class TextInterface {
         threads = new ThreadDao(database); 
         messages = new MessageDao(database);
         users = new UserDao(database); 
+        
+        threads.setDaos(users, messages, subforums);
+        messages.setDaos(threads, users);
     }
 
     private void listSubforums() throws SQLException {
