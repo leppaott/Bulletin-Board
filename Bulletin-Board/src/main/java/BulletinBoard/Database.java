@@ -39,14 +39,12 @@ public class Database {
             int i = 1;
             for (Object object : params) {
                 if (object instanceof Collection) { //perhaps better way...
-                    int j = 1;
                     for (Object obj : (Collection) object) {
-                        stmt.setObject(j++, obj);
+                        stmt.setObject(i++, obj);
                     }
                 } else {
-                    stmt.setObject(i, object);
+                    stmt.setObject(i++, object);
                 }
-                i++;
             }
 
             ResultSet rs = stmt.executeQuery();

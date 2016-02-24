@@ -6,9 +6,10 @@ import Dao.ThreadDao;
 import Dao.UserDao;
 import Domain.Message;
 import Domain.Subforum;
-import Domain.Thread;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TextInterface {
 
@@ -43,5 +44,10 @@ public class TextInterface {
 
     public void start() throws SQLException {
         listSubforums();
+
+        List<Integer> list = Arrays.asList(1, 2, 3);
+        for (Message message : messages.findAllIn(list)) {
+            System.out.println(message.getContent());
+        }
     }
 }
