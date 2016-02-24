@@ -119,15 +119,16 @@ public class MessageDao {
 
         List<Message> messages = new ArrayList<>();
         
-//        StringBuilder params = new StringBuilder("?");
-//        for (int i = 1; i < keys.size(); i++) {
-//            params.append(", ?");
-//        }
+        StringBuilder params = new StringBuilder("?");
+        for (int i = 1; i < keys.size(); i++) {
+            params.append(", ?");
+        }
         
-        try (ResultSet rs = database.query("SELECT * FROM Message;", keys)) {
+        try (ResultSet rs = database.query("SELECT * FROM Message WHERE messageId IN (" 
+                + params +");", keys)) {
             while (rs.next()) {
                messages.add(new Message(rs.getInt("messageId"),
-                            threadDao.findOne(rs.getInt("threadId")), //TODO
+                            threadDao.findOne(rs.getInt("threadId")), //TODO perhaps
                             userDao.findOne(rs.getInt("sender")),   //TODO
                             rs.getInt("order"),
                             rs.getTimestamp("dateTime"),
