@@ -8,9 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.sqlite.util.StringUtils;
 
 public class MessageDao {
 
@@ -54,7 +56,7 @@ public class MessageDao {
                 Timestamp date = rs.getTimestamp("dateTime");
                 String content = rs.getString("content");
 
-                Message msg = new Message(id, order, date, content);
+                Message msg = new Message(id, null, null, order, date, content);
                 messages.add(msg);
 
                 threadRefs.putIfAbsent(thread, new ArrayList<>());
@@ -83,26 +85,22 @@ public class MessageDao {
         List<Message> messages = new ArrayList<>();
         Map<Integer, List<Message>> senderRefs = new HashMap<>();
 
+        Thread thread = threadDao.findOne(threadId);
+
         try (ResultSet rs = database.query("SELECT * FROM Message WHERE threadId = ?;", threadId)) {
             while (rs.next()) {
                 int id = rs.getInt("messageId");
-                int thread = rs.getInt("threadId");
                 int sender = rs.getInt("sender");
                 int order = rs.getInt("order");
                 Timestamp date = rs.getTimestamp("dateTime");
                 String content = rs.getString("content");
 
-                Message msg = new Message(id, order, date, content);
+                Message msg = new Message(id, thread, null, order, date, content);
                 messages.add(msg);
 
                 senderRefs.putIfAbsent(sender, new ArrayList<>());
                 senderRefs.get(sender).add(msg);
             }
-        }
-
-        Thread thread = threadDao.findOne(threadId);
-        for (Message message : messages) {
-            message.setThread(thread);
         }
 
         for (User user : userDao.findAllIn(senderRefs.keySet())) {
@@ -111,6 +109,31 @@ public class MessageDao {
             }
         }
 
+        return messages;
+    }
+
+    public List<Message> findAllIn(Collection<Integer> keys) throws SQLException {
+        if (keys.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Message> messages = new ArrayList<>();
+        
+//        StringBuilder params = new StringBuilder("?");
+//        for (int i = 1; i < keys.size(); i++) {
+//            params.append(", ?");
+//        }
+        
+        try (ResultSet rs = database.query("SELECT * FROM Message;", keys)) {
+            while (rs.next()) {
+               messages.add(new Message(rs.getInt("messageId"),
+                            threadDao.findOne(rs.getInt("threadId")), //TODO
+                            userDao.findOne(rs.getInt("sender")),   //TODO
+                            rs.getInt("order"),
+                            rs.getTimestamp("dateTime"),
+                            rs.getString("content")));
+            }
+        }
         return messages;
     }
 

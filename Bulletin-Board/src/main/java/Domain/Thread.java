@@ -5,16 +5,20 @@ import java.sql.Timestamp;
 public class Thread {
 
     private final int threadId;
-    private final int forumId;
-    private final User sender;
+    private Subforum forum;
+    private User sender;
     private Message lastMessage;
     private String name;
     private Timestamp dateTime;
 
-    public Thread(int threadId, int forumId, User sender, Message lastMessage,
+    public Thread(int threadId, Subforum forum, String name, Timestamp dateTime) {
+        this(threadId, null, null, null, name, dateTime);
+    }
+    
+    public Thread(int threadId, Subforum forum, User sender, Message lastMessage,
             String name, Timestamp dateTime) {
         this.threadId = threadId;
-        this.forumId = forumId;
+        this.forum = forum;
         this.sender = sender;
         this.lastMessage = lastMessage;
         this.name = name;
@@ -25,8 +29,8 @@ public class Thread {
         return threadId;
     }
 
-    public int getForumId() {
-        return forumId;
+    public Subforum getForum() {
+        return forum;
     }
 
     public User getSender() {
@@ -44,5 +48,16 @@ public class Thread {
     public Timestamp getDateTime() {
         return dateTime;
     }
-
+    
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+    
+    public void setLastMessage(Message lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+    
+    public void setForum(Subforum forum) {
+        this.forum = forum;
+    }
 }

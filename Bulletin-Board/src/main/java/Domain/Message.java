@@ -11,10 +11,6 @@ public class Message {
     private Timestamp dateTime;
     private String content;
 
-    public Message(int messageId, int order, Timestamp dateTime, String content) {
-        this(messageId, null, null, order, dateTime, content);
-    }
-
     public Message(int messageId, Thread thread, User sender, int order, Timestamp dateTime, String content) {
         this.messageId = messageId;
         this.thread = thread;
