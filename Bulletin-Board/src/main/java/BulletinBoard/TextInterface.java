@@ -6,6 +6,7 @@ import Dao.ThreadDao;
 import Dao.UserDao;
 import Domain.Message;
 import Domain.Subforum;
+import Domain.Thread;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
