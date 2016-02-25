@@ -3,6 +3,7 @@ package Dao;
 import BulletinBoard.Database;
 import Domain.Subforum;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 public class SubforumDao {
@@ -33,5 +34,10 @@ public class SubforumDao {
                     rs.getString("name"),
                     rs.getInt("postcount"));
         });
+    }
+    
+    public List<Subforum> findAllIn(Collection<Integer> keys) throws SQLException {
+        //todo
+        return null;
     }
 }
