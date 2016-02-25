@@ -2,7 +2,9 @@ package Dao;
 
 import BulletinBoard.Database;
 import Domain.Subforum;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,9 +37,23 @@ public class SubforumDao {
                     rs.getInt("postcount"));
         });
     }
-    
+
     public List<Subforum> findAllIn(Collection<Integer> keys) throws SQLException {
-        //todo
-        return null;
+        List<Subforum> forums = new ArrayList<>();
+
+        StringBuilder params = new StringBuilder("?");
+        for (int i = 1; i < keys.size(); i++) {
+            params.append(", ?");
+        }
+
+        try (ResultSet rs = database.query("SELECT * FROM Subforum WHERE forumId IN ("
+                + params + ");", keys)) {
+            while (rs.next()) {
+                forums.add(new Subforum(rs.getInt("forumId"),
+                        rs.getString("name"),
+                        rs.getInt("postcount")));
+            }
+        }
+        return forums;
     }
 }
