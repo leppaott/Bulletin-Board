@@ -23,37 +23,28 @@ public class ThreadDao {
 
     public ThreadDao(Database database) {
         this.database = database;
-        userDao = new UserDao(database);
-        messageDao = new MessageDao(database);
-        forumDao = new SubforumDao(database);
     }
 
-    public void setDaos(UserDao userDao, MessageDao messageDao, SubforumDao forumDao) {
+    public void initDaos(UserDao userDao, MessageDao messageDao, SubforumDao forumDao) {
         this.userDao = userDao;
         this.messageDao = messageDao;
         this.forumDao = forumDao;
     }
 
-    /**
-     * Remember to set lastMessage with
-     * thread.setLastMessage(messageDao.findLastMessageForThread(thread.getThreadId()))
-     *
-     * @param forumId
-     * @return
-     * @throws SQLException
-     */
-    public Thread findOne(int forumId) throws SQLException {
+    public Thread findOne(int threadId) throws SQLException {
         List<Thread> row = database.queryAndCollect(
-                "SELECT * FROM Thread WHERE forumId = ?;",
+                "SELECT * FROM Thread WHERE threadId = ?;",
                 rs -> {
                     return new Thread(
-                            rs.getInt("threadId"),
+                            threadId,
                             forumDao.findOne(rs.getInt("forumId")),
                             userDao.findOne(rs.getInt("sender")),
-                            null,//messageDao.findOne(rs.getInt("lastMessage")),
+                            null,
                             rs.getString("name"),
-                            new Timestamp(rs.getLong("dateTime")));
-                }, forumId);
+                            new Timestamp(rs.getLong("dateTime")),
+                            rs.getInt("postcount")
+                 );
+                }, threadId);
 
         return !row.isEmpty() ? row.get(0) : null;
     }
@@ -72,12 +63,13 @@ public class ThreadDao {
                 int lastMsg = rs.getInt("lastMessage");
                 Timestamp date = new Timestamp(rs.getLong("dateTime"));
                 String name = rs.getString("name");
+                int postcount = rs.getInt("postcount");
 
-                Thread thread = new Thread(id, null, null, null, name, date);
+                Thread thread = new Thread(id, null, null, null, name, date, postcount);
                 thread.setForum(forumDao.findOne(forum));
-                thread.setLastMessage(messageDao.findLastMessageForThread(id));
+                thread.setLastMessage(messageDao.findOne(lastMsg));
                 thread.setSender(userDao.findOne(sender));
-                
+
                 threads.add(thread);
 
                 subforumRefs.putIfAbsent(forum, new ArrayList<>());
@@ -100,7 +92,7 @@ public class ThreadDao {
                 thread.setSender(user);
             }
         }
-        
+
         for (Message message : messageDao.findAllIn(messageRefs.keySet())) {
             for (Thread thread : messageRefs.get(message.getMessageId())) {
                 thread.setLastMessage(message);
@@ -128,8 +120,9 @@ public class ThreadDao {
                 int lastMessage = rs.getInt("lastMessage");
                 Timestamp date = new Timestamp(rs.getLong("dateTime"));
                 String name = rs.getString("name");
-
-                Thread thread = new Thread(id, forum, name, date);
+                int postcount = rs.getInt("postcount");
+                
+                Thread thread = new Thread(id, forum, name, date, postcount);
                 threads.add(thread);
 
                 senderRefs.putIfAbsent(sender, new ArrayList<>());

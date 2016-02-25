@@ -23,7 +23,7 @@ public class MessageDao {
         this.database = database;
     }
     
-    public void setDaos(ThreadDao threadDao, UserDao userDao) {
+    public void initDaos(ThreadDao threadDao, UserDao userDao) {
         this.threadDao = threadDao;
         this.userDao = userDao;
     }
@@ -126,7 +126,7 @@ public class MessageDao {
                 + params +");", keys)) {
             while (rs.next()) {
                messages.add(new Message(rs.getInt("messageId"),
-                            threadDao.findOne(rs.getInt("threadId")), //TODO perhaps
+                            threadDao.findOne(rs.getInt("threadId")), //TODO refs
                             userDao.findOne(rs.getInt("sender")),   //TODO
                             rs.getInt("order"),
                             new Timestamp(rs.getLong("dateTime")),

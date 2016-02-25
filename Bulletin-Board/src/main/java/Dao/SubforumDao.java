@@ -49,11 +49,13 @@ public class SubforumDao {
         try (ResultSet rs = database.query("SELECT * FROM Subforum WHERE forumId IN ("
                 + params + ");", keys)) {
             while (rs.next()) {
-                forums.add(new Subforum(rs.getInt("forumId"),
+                forums.add(new Subforum(
+                        rs.getInt("forumId"),
                         rs.getString("name"),
                         rs.getInt("postcount")));
             }
         }
+
         return forums;
     }
 }
