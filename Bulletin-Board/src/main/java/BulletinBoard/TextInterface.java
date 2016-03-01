@@ -52,13 +52,19 @@ public class TextInterface {
     }
 
     private void listMessages(int threadId) throws SQLException {
-        System.out.println("Lähettäjä\t\tAika");
+        System.out.println("Lähettäjä\t\tAika\t\t\tSisältö");
         
         for (Message message : board.getMessagesIn(threadId)) {
             
+            String sender = "null";
+            if(message.getSender() != null) {
+                sender = message.getSender().getUsername();
+            }            
             String date = message.getDateTime().toString().substring(0, 16);
-            System.out.println(message.getSender()+"\t\t\t");
-            System.out.println("\t\t"+ date + "\t");
+            
+            System.out.print(sender +"\t\t\t");
+            System.out.print(date );
+            System.out.println("\t" + message.getContent());
         }
     }
 
