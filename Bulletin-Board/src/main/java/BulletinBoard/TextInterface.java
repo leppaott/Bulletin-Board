@@ -52,7 +52,14 @@ public class TextInterface {
     }
 
     private void listMessages(int threadId) throws SQLException {
-
+        System.out.println("Lähettäjä\t\tAika");
+        
+        for (Message message : board.getMessagesIn(threadId)) {
+            
+            String date = message.getDateTime().toString().substring(0, 16);
+            System.out.println(message.getSender()+"\t\t\t");
+            System.out.println("\t\t"+ date + "\t");
+        }
     }
 
     private void listMessagesForUsers(int userId) throws SQLException {
@@ -94,48 +101,49 @@ public class TextInterface {
             System.out.println("[1] Tarkastele aluetta");
             System.out.println("[2] Hae käyttäjän perusteella");
             System.out.println("[3] Lisää subforum");
-            String komento = reader.nextLine();
+            String command = reader.nextLine();
             
-            if(komento.equals("1")) {
+            if(command.equals("1")) {
                 System.out.print("Forumid: ");
                 int forumid = Integer.parseInt(reader.nextLine());
                 listThreads(forumid);
                 
                 System.out.println("[1] Tarkastele aihetta");
                 System.out.println("[2] Lisää aihe");
-                String lanka = reader.nextLine();
+                String command2 = reader.nextLine();
                 
-                if(lanka.equals("1")) {
+                if(command2.equals("1")) {
                     System.out.print("Threadid: ");
                     int threadid = Integer.parseInt(reader.nextLine());
                     listMessages(threadid);
+                    
                     System.out.println("[1] Lisää viesti");
-                    String joo = reader.nextLine();
-                    if(joo.equals("1")) {
+                    String command4 = reader.nextLine();
+                    if(command4.equals("1")) {
                         addMessage();
                     }     
                 }
-                if(lanka.equals("2")) {
+                if(command2.equals("2")) {
                     addThread();
                 }
             }
             
-            if(komento.equals("2")) {
+            if(command.equals("2")) {
                 System.out.println("[1] Viestin perusteella");
                 System.out.println("[2] Aiheen perusteella");
-                String haku = reader.nextLine();
+                String command3 = reader.nextLine();
                 System.out.print("Userid: ");
                 int userid = Integer.parseInt(reader.nextLine());
                 
-                if(haku.equals("1")) {
+                if(command3.equals("1")) {
                     listMessagesForUsers(userid);
                 }
-                if(haku.equals("2")) {
+                if(command3.equals("2")) {
                     listThreadsForUsers(userid);
                 }
             }
             
-            if(komento.equals("3")) {
+            if(command.equals("3")) {
                 addSubforum();
             }
 
