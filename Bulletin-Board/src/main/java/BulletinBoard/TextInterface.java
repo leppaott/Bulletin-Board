@@ -76,21 +76,69 @@ public class TextInterface {
     }
 
     public void start() throws SQLException {
+    
+        /*
         listSubforums();
 
         List<Integer> list = Arrays.asList(1, 2, 3);
         for (Message message : board.getMessagesIn(list)) {
             System.out.println(message.getContent());
         }
-
+         
+         */       
+                
         while (true) {
             //commands
             Scanner reader = new Scanner(System.in);
-
-            if ("listThreads".equals("listThreads")) {
-                listThreads(1);
-                break;
+            listSubforums();
+            System.out.println("[1] Tarkastele aluetta");
+            System.out.println("[2] Hae käyttäjän perusteella");
+            System.out.println("[3] Lisää subforum");
+            String komento = reader.nextLine();
+            
+            if(komento.equals("1")) {
+                System.out.print("Forumid: ");
+                int forumid = Integer.parseInt(reader.nextLine());
+                listThreads(forumid);
+                
+                System.out.println("[1] Tarkastele aihetta");
+                System.out.println("[2] Lisää aihe");
+                String lanka = reader.nextLine();
+                
+                if(lanka.equals("1")) {
+                    System.out.print("Threadid: ");
+                    int threadid = Integer.parseInt(reader.nextLine());
+                    listMessages(threadid);
+                    System.out.println("[1] Lisää viesti");
+                    String joo = reader.nextLine();
+                    if(joo.equals("1")) {
+                        addMessage();
+                    }     
+                }
+                if(lanka.equals("2")) {
+                    addThread();
+                }
             }
+            
+            if(komento.equals("2")) {
+                System.out.println("[1] Viestin perusteella");
+                System.out.println("[2] Aiheen perusteella");
+                String haku = reader.nextLine();
+                System.out.print("Userid: ");
+                int userid = Integer.parseInt(reader.nextLine());
+                
+                if(haku.equals("1")) {
+                    listMessagesForUsers(userid);
+                }
+                if(haku.equals("2")) {
+                    listThreadsForUsers(userid);
+                }
+            }
+            
+            if(komento.equals("3")) {
+                addSubforum();
+            }
+
         }
     }
 }
