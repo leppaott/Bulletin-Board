@@ -63,13 +63,26 @@ public class TextInterface {
             String date = message.getDateTime().toString().substring(0, 16);
             
             System.out.print(sender +"\t\t\t");
-            System.out.print(date );
+            System.out.print(date);
             System.out.println("\t" + message.getContent());
         }
     }
 
     private void listMessagesForUsers(int userId) throws SQLException {
-
+        System.out.println("Lähettäjä\t\tAika\t\t\tSisältö");
+        
+        for (Message message : board.getMessages()) {
+            if(message.getSender() != null) {
+                if(message.getSender().getUserId() == userId) {
+                    String date = message.getDateTime().toString().substring(0, 16);
+                    
+                    System.out.println(message.getSender().getUsername() + "\t\t\t");
+                    System.out.println(date);
+                    System.out.println("\t" + message.getContent());
+                }
+            }
+            
+        }
     }
 
     private void listThreadsForUsers(int userId) throws SQLException {
@@ -107,6 +120,7 @@ public class TextInterface {
             System.out.println("[1] Tarkastele aluetta");
             System.out.println("[2] Hae käyttäjän perusteella");
             System.out.println("[3] Lisää subforum");
+            System.out.println("[x] Lopeta");
             String command = reader.nextLine();
             
             if(command.equals("1")) {
@@ -151,6 +165,10 @@ public class TextInterface {
             
             if(command.equals("3")) {
                 addSubforum();
+            }
+            
+            if(command.equals("x")) {
+                break;
             }
 
         }
