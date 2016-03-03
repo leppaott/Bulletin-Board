@@ -30,10 +30,33 @@ public class ThreadDao {
         this.messageDao = messageDao;
         this.forumDao = forumDao;
     }
+    
+    public boolean addThread(int forumId, int senderId, String name) throws SQLException {
+        long dateTime = System.currentTimeMillis();
+        
+        int changes = database.update("INSERT INTO Thread (forumId, sender, dateTime, name, postcount)"
+                + " VALUES(?, ?, ?, ?, 0);", forumId, senderId, dateTime, name); 
+
+        return changes != 0;         
+    }
+    
+    public boolean editThread(int threadId, int lastMessageId, int postcount) throws SQLException {
+        int changes = database.update("UPDATE Thread SET lastMessage=?, postcount=? WHERE threadId=?;",
+                lastMessageId, postcount, threadId);
+        
+        return changes != 0;
+    }
+    
+    public boolean editThread(int threadId, String name) throws SQLException {
+        int changes = database.update("UPDATE Thread SET name='?' WHERE threadId=?;",
+                name, threadId);
+        
+        return changes != 0;
+    }
 
     public Thread findOne(int threadId) throws SQLException {
         List<Thread> row = database.queryAndCollect(
-                "SELECT * FROM Thread WHERE threadId = ?;",
+                "SELECT * FROM Thread WHERE threadId=?;",
                 rs -> {
                     return new Thread(
                             threadId,
@@ -43,7 +66,7 @@ public class ThreadDao {
                             rs.getString("name"),
                             new Timestamp(rs.getLong("dateTime")),
                             rs.getInt("postcount")
-                 );
+                    );
                 }, threadId);
 
         return !row.isEmpty() ? row.get(0) : null;
@@ -103,7 +126,57 @@ public class ThreadDao {
     }
 
     public List<Thread> findAllIn(Collection<Integer> keys) throws SQLException {
-        return new ArrayList<>();
+        List<Thread> threads = new ArrayList<>();
+        Map<Integer, List<Thread>> subforumRefs = new HashMap<>();
+        Map<Integer, List<Thread>> senderRefs = new HashMap<>();
+        Map<Integer, List<Thread>> messageRefs = new HashMap<>();
+
+        try (ResultSet rs = database.query("SELECT * FROM Thread WHERE threadId IN ("
+                + database.getListPlaceholder(keys.size()) + ");")) {
+            while (rs.next()) {
+                int id = rs.getInt("threadId");
+                int forum = rs.getInt("forumId");
+                int sender = rs.getInt("sender");
+                int lastMsg = rs.getInt("lastMessage");
+                Timestamp date = new Timestamp(rs.getLong("dateTime"));
+                String name = rs.getString("name");
+                int postcount = rs.getInt("postcount");
+
+                Thread thread = new Thread(id, null, null, null, name, date, postcount);
+                thread.setForum(forumDao.findOne(forum));
+                thread.setLastMessage(messageDao.findOne(lastMsg));
+                thread.setSender(userDao.findOne(sender));
+
+                threads.add(thread);
+
+                subforumRefs.putIfAbsent(forum, new ArrayList<>());
+                subforumRefs.get(forum).add(thread);
+                senderRefs.putIfAbsent(sender, new ArrayList<>());
+                senderRefs.get(sender).add(thread);
+                messageRefs.putIfAbsent(lastMsg, new ArrayList<>());
+                messageRefs.get(lastMsg).add(thread);
+            }
+        }
+
+        for (Subforum forum : forumDao.findAllIn(subforumRefs.keySet())) {
+            for (Thread thread : subforumRefs.get(forum.getForumId())) {
+                thread.setForum(forum);
+            }
+        }
+
+        for (User user : userDao.findAllIn(senderRefs.keySet())) {
+            for (Thread thread : senderRefs.get(user.getUserId())) {
+                thread.setSender(user);
+            }
+        }
+
+        for (Message message : messageDao.findAllIn(messageRefs.keySet())) {
+            for (Thread thread : messageRefs.get(message.getMessageId())) {
+                thread.setLastMessage(message);
+            }
+        }
+
+        return threads;
     }
 
     public List<Thread> findAllIn(int forumId) throws SQLException {
@@ -121,7 +194,7 @@ public class ThreadDao {
                 Timestamp date = new Timestamp(rs.getLong("dateTime"));
                 String name = rs.getString("name");
                 int postcount = rs.getInt("postcount");
-                
+
                 Thread thread = new Thread(id, forum, name, date, postcount);
                 threads.add(thread);
 

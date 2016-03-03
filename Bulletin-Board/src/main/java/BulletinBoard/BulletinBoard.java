@@ -34,6 +34,17 @@ public class BulletinBoard {
     }
 
     //subforums
+    /**
+     * Adds a new subforum with a given name.
+     *
+     * @param forumName
+     * @return
+     * @throws SQLException
+     */
+    public boolean addSubforum(String forumName) throws SQLException {
+        return subforums.addSubforum(forumName);
+    }
+
     public Subforum getSubforum(int forumId) throws SQLException {
         return subforums.findOne(forumId);
     }
@@ -59,8 +70,37 @@ public class BulletinBoard {
     }
 
     //messages
+    /**
+     * Adds a new message into the database.
+     *
+     * @param threadId
+     * @param senderId
+     * @param content
+     * @return
+     * @throws SQLException
+     */
+    public boolean addMessage(int threadId, int senderId, String content) throws SQLException {
+        return messages.addMessage(threadId, senderId, content);
+    }
+
+    /**
+     * Updates message's content.
+     *
+     * @param messageId
+     * @param newContent
+     * @return
+     * @throws SQLException
+     */
+    public boolean editMessage(int messageId, String newContent) throws SQLException {
+        return messages.editMessage(messageId, newContent);
+    }
+
     public Message getMessage(int messageId) throws SQLException {
         return messages.findOne(messageId);
+    }
+
+    public Message getMessage(int threadId, int order) throws SQLException {
+        return messages.findOne(threadId, order);
     }
 
     public List<Message> getMessages() throws SQLException {
@@ -84,8 +124,48 @@ public class BulletinBoard {
     }
 
     //threads
+    /**
+     * Adds a new thread with a given sender and name.
+     *
+     * @param forumId
+     * @param senderId
+     * @param name
+     * @return
+     * @throws SQLException
+     */
+    public boolean addThread(int forumId, int senderId, String name) throws SQLException {
+        return threads.addThread(forumId, senderId, name);
+    }
+
+    /**
+     * Updates thread's lastMessage and postcount.
+     *
+     * @param threadId
+     * @param lastMessageId
+     * @param postcount
+     * @return
+     * @throws SQLException
+     */
+    public boolean editThread(int threadId, int lastMessageId, int postcount) throws SQLException {
+        return threads.editThread(threadId, lastMessageId, postcount);
+    }
+
+    /**
+     * Updates thread's name.
+     *
+     * @param threadId
+     * @param name
+     * @return
+     * @throws SQLException
+     */
+    public boolean editThread(int threadId, String name) throws SQLException {
+        return threads.editThread(threadId, name);
+    }
+
     public Thread getThread(int threadId) throws SQLException {
-        return threads.findOne(threadId);
+        Thread thread = threads.findOne(threadId);
+        thread.setLastMessage(messages.findLastMessageForThread(threadId));
+        return thread;
     }
 
     public List<Thread> getThreads() throws SQLException {
@@ -101,6 +181,41 @@ public class BulletinBoard {
     }
 
     //users
+    /**
+     * Adds a new user with a given name.
+     *
+     * @param name
+     * @return
+     * @throws SQLException
+     */
+    public boolean addUser(String name) throws SQLException {
+        return users.addUser(name);
+    }
+
+    /**
+     * Updates user's postcount.
+     *
+     * @param userId
+     * @param postcount
+     * @return
+     * @throws SQLException
+     */
+    public boolean editUser(int userId, int postcount) throws SQLException {
+        return users.editUser(userId, postcount);
+    }
+
+    /**
+     * Updates user's name.
+     *
+     * @param userId
+     * @param name
+     * @return
+     * @throws SQLException
+     */
+    public boolean editUser(int userId, String name) throws SQLException {
+        return users.editUser(userId, name);
+    }
+
     public User getUser(int userId) throws SQLException {
         return users.findOne(userId);
     }

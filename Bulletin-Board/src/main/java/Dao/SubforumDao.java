@@ -2,9 +2,7 @@ package Dao;
 
 import BulletinBoard.Database;
 import Domain.Subforum;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,10 +13,16 @@ public class SubforumDao {
     public SubforumDao(Database database) {
         this.database = database;
     }
+    
+    public boolean addSubforum(String name) throws SQLException {
+        int changes = database.update("INSERT INTO Subforum (name, postcount) VALUES(?, 0);", name);
+        
+        return changes != 0;
+    }
 
     public Subforum findOne(int forumId) throws SQLException {
         List<Subforum> row = database.queryAndCollect(
-                "SELECT * FROM Subforum WHERE forumId = ?;", rs -> {
+                "SELECT * FROM Subforum WHERE forumId=?;", rs -> {
                     return new Subforum(
                             rs.getInt("forumId"),
                             rs.getString("name"),
@@ -39,22 +43,14 @@ public class SubforumDao {
     }
 
     public List<Subforum> findAllIn(Collection<Integer> keys) throws SQLException {
-        List<Subforum> forums = new ArrayList<>();
-
-        StringBuilder params = new StringBuilder("?");
-        for (int i = 1; i < keys.size(); i++) {
-            params.append(", ?");
-        }
-
-        try (ResultSet rs = database.query("SELECT * FROM Subforum WHERE forumId IN ("
-                + params + ");", keys)) {
-            while (rs.next()) {
-                forums.add(new Subforum(
-                        rs.getInt("forumId"),
-                        rs.getString("name"),
-                        rs.getInt("postcount")));
-            }
-        }
+        List<Subforum> forums = database.queryAndCollect("SELECT * FROM Subforum WHERE forumId IN ("
+                + database.getListPlaceholder(keys.size()) + ");", rs -> {
+                    return new Subforum(
+                            rs.getInt("forumId"),
+                            rs.getString("name"),
+                            rs.getInt("postcount")
+                    );
+                }, keys);
 
         return forums;
     }

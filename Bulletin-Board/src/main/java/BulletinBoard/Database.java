@@ -1,6 +1,8 @@
 package BulletinBoard;
 
 import Domain.Collector;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.*;
 import java.util.*;
 import javax.sql.rowset.CachedRowSet;
@@ -13,13 +15,48 @@ public class Database {
     private final RowSetFactory factory;
     private boolean debug;
 
-    public Database(String address) throws Exception {
-        this.connection = DriverManager.getConnection(address);
+    public Database(String address) throws SQLException {
+        String envAddress = System.getenv("DATABASE_URL");
+
+        if (envAddress != null) {
+            address = envAddress;
+        }
+
+        this.connection = getConnection(address);
         this.factory = RowSetProvider.newFactory();
+    }
+    
+    private Connection getConnection(String address) throws SQLException {
+        if (address.contains("postgres")) {
+            try {
+                URI dbUri = new URI(address);
+                
+                String username = dbUri.getUserInfo().split(":")[0];
+                String password = dbUri.getUserInfo().split(":")[1];
+                String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' 
+                        + dbUri.getPort() + dbUri.getPath();
+
+                return DriverManager.getConnection(dbUrl, username, password);
+            } catch (URISyntaxException | SQLException t) {
+                System.out.println("Error: " + t.getMessage());
+            }
+        }
+
+        return DriverManager.getConnection(address);
     }
 
     public void setDebugMode(boolean d) {
         debug = d;
+    }
+
+    public String getListPlaceholder(int size) {
+        StringBuilder params = new StringBuilder("?");
+
+        for (int i = 1; i < size; i++) {
+            params.append(", ?");
+        }
+
+        return params.toString();
     }
 
     private PreparedStatement prepareStatement(String query, Object... params) throws SQLException {
@@ -84,6 +121,7 @@ public class Database {
 
     public int update(String updateQuery, Object... params) throws SQLException {
         int changes;
+
         try (PreparedStatement stmt = prepareStatement(updateQuery, params)) {
             changes = stmt.executeUpdate();
 
