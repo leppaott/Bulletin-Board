@@ -8,5 +8,12 @@
 
     <body>
         <h1>Moikka moi</h1>
+        <div>
+            <ul>
+                <li th:each="subforum: ${subforums}">
+                    <span th:text="${subforum.forumId}">1</span> <span th:text="${subforum.name}">Essi esimerkki</span>
+                </li>
+            </ul>
+        </div>
     </body>
 </html>
