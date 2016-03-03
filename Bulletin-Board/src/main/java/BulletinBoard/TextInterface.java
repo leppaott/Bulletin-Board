@@ -3,10 +3,7 @@ package BulletinBoard;
 import Domain.Message;
 import Domain.Subforum;
 import Domain.Thread;
-import Domain.User;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 public class TextInterface {
@@ -103,15 +100,14 @@ public class TextInterface {
 
     public void start() throws SQLException {
     
-        /*
-        listSubforums();
-
-        List<Integer> list = Arrays.asList(1, 2, 3);
-        for (Message message : board.getMessagesIn(list)) {
-            System.out.println(message.getContent());
-        }
-         
-         */       
+        listSubforums();  
+        System.out.println();
+        listThreads(1);
+        System.out.println();
+        listMessages(1);
+        System.out.println();
+        listMessagesForUsers(1);
+        System.out.println();
                 
         while (true) {
             //commands

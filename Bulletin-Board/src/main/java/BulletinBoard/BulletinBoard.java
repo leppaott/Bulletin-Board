@@ -163,9 +163,7 @@ public class BulletinBoard {
     }
 
     public Thread getThread(int threadId) throws SQLException {
-        Thread thread = threads.findOne(threadId);
-        thread.setLastMessage(messages.findLastMessageForThread(threadId));
-        return thread;
+        return threads.findOne(threadId);
     }
 
     public List<Thread> getThreads() throws SQLException {

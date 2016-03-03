@@ -40,7 +40,7 @@ public class UserDao {
     
     public User findOne(int userId) throws SQLException {
         List<User> row = database.queryAndCollect(
-                "SELECT * FROM User WHERE userId = ?;", rs -> {
+                "SELECT * FROM User WHERE userId=?;", rs -> {
                     return new User(
                             rs.getInt("userId"),
                             rs.getString("username"),

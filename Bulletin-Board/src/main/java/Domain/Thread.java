@@ -7,16 +7,12 @@ public class Thread {
     private final int threadId;
     private Subforum forum;
     private User sender;
-    private Message lastMessage;
+    private int lastMessage;
     private String name;
     private Timestamp dateTime;
     private int postcount;
 
-    public Thread(int threadId, Subforum forum, String name, Timestamp dateTime, int postcount) {
-        this(threadId, null, null, null, name, dateTime, postcount);
-    }
-
-    public Thread(int threadId, Subforum forum, User sender, Message lastMessage,
+    public Thread(int threadId, Subforum forum, User sender, int lastMessage,
             String name, Timestamp dateTime, int postcount) {
         this.threadId = threadId;
         this.forum = forum;
@@ -39,13 +35,9 @@ public class Thread {
         return sender;
     }
     
-    /**
-     * DEPRECATED
-     * @return 
-     */
-    public Message getLastMessage() {
+    public int getLastMessage() {
         return lastMessage;
-    }
+    } 
 
     public String getName() {
         return name;
@@ -61,14 +53,6 @@ public class Thread {
     
     public void setSender(User sender) {
         this.sender = sender;
-    }
-
-      /**
-     * DEPRECATED
-     * @param lastMessage
-     */
-    public void setLastMessage(Message lastMessage) {
-        this.lastMessage = lastMessage;
     }
 
     public void setForum(Subforum forum) {

@@ -35,19 +35,20 @@ public class MessageDao {
             return false;
         }
 
-        int order = thread.getLastMessage().getOrder() + 1;
+        Message lastMsg = findOne(thread.getLastMessage());
+        int order = lastMsg.getOrder() + 1;
         long dateTime = System.currentTimeMillis();
 
         database.update("INSERT INTO Message (threadId, sender, order, dateTime, content)"
                 + "VALUES(?, ?, ?, ?, '?');", threadId, senderId, order, dateTime, content);
 
-        Message message = findOne(threadId, order); //to update thread lastMsg
+        Message newLastMsg = findOne(threadId, order);
         
-        if (message == null) {
+        if (newLastMsg == null) {
             return false;
         }
         
-        return threadDao.editThread(threadId, message.getMessageId(), thread.getPostcount() + 1);
+        return threadDao.editThread(threadId, newLastMsg.getMessageId(), thread.getPostcount() + 1);
     }
 
     public boolean editMessage(int messageId, String newContent) throws SQLException {
