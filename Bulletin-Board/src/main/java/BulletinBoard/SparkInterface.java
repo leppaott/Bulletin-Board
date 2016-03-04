@@ -1,8 +1,11 @@
 package BulletinBoard;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import spark.ModelAndView;
+import spark.Spark;
 import static spark.Spark.get;
+import static spark.Spark.post;
 import spark.TemplateEngine;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 
@@ -25,9 +28,12 @@ public class SparkInterface {
         
         get("/subforum", (req, res) -> { // /subforum?id=1
             HashMap map = new HashMap<>();
-            int forumId = Integer.parseInt(req.queryParams("id"));
-            map.put("subforum", board.getSubforum(forumId).getName());
-            map.put("threads", board.getThreadsIn(forumId));
+            
+            try {
+                int forumId = Integer.parseInt(req.queryParams("id"));
+                map.put("subforum", board.getSubforum(forumId).getName());
+                map.put("threads", board.getThreadsIn(forumId));
+            } catch(NumberFormatException | SQLException e) {}
 
             return new ModelAndView(map, "subforum");
         }, templateEngine);
@@ -39,6 +45,6 @@ public class SparkInterface {
             map.put("messages", board.getMessagesIn(threadId));
             
             return new ModelAndView(map, "thread");
-        }, templateEngine);
+        }, templateEngine);     
     }
 }

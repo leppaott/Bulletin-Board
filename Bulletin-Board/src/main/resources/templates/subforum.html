@@ -1,20 +1,50 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
     <head>
         <title th:text="${subforum}"></title>
         <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
     </head>
 
     <body>
-        <h1 th:text="${subforum}"></h1>
-        <div>
-            <ul>
-                <li th:each="thread: ${threads}">
-                    <a href="thread.html" th:href="@{~/thread(id=${thread.threadId})}">
-                        <p th:text="${thread.name}"></p></a>
-                </li>
-            </ul>
+        <div class="container">
+            <div class="page-header page-heading">
+                <h1 class="pull-left"><span th:text="${subforum}"></span></h1>
+                <ol class="breadcrumb pull-right where-am-i">
+                    <li><a href="/">Subforums</a></li>
+                    <li class="active">Threads</li>
+                </ol>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="cell-stat"></th>
+                        <th><h3>Thread</h3></th>
+                        <th class="cell-stat text-center hidden-xs hidden-sm">Posts</th>
+                        <th class="cell-stat-2x hidden-xs hidden-sm">Last Post</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="thread: ${threads}">
+                        <td class="text-center"><i class="fa fa-question fa-2x text-primary"></i></td>
+                        <td>
+                            <h4><a href="thread.html" th:href="@{~/thread(id=${thread.threadId})}">
+                                    <span th:text="${thread.name}"></span></a></h4>
+                        </td>
+                        <td class="text-center hidden-xs hidden-sm"><span th:text="${thread.postcount}"></span></td>
+                        <td class="hidden-xs hidden-sm">14-23-9999</td>
+                    </tr>
+                </tbody>
+            </table>
+            <form role="form">
+                <div class="form-group">
+                    <label for="comment">Comment:</label>
+                    <textarea class="form-control" rows="5" id="comment" style="resize:none;"></textarea>
+                    <button type="button" class="btn btn-default">Send</button>
+                </div>
+            </form>
         </div>
     </body>
 </html>
