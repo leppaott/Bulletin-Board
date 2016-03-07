@@ -26,11 +26,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="message: ${messages}">
+                    <tr th:each="message, iterStat: ${messages}">
                         <td class="text-center"><i class="fa fa-question fa-2x text-primary"></i></td>
                         <td class="hidden-xs hidden-sm">
                             <span th:text="${'by ' + message.sender.username}"></span><br/>
-                            <span th:text="${'Time sent: ' + message.dateTime.toString()}"></span><br/>
+                            <span th:text="${'Time sent: ' + messages[iterStat.index]}"></span><br/>
                             <span th:text="${message.content}"></span>
                         </td>
                     </tr>
