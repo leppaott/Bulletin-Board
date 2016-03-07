@@ -4,16 +4,45 @@
     <head>
         <title th:text="${thread}"></title>
         <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
     </head>
 
     <body>
-        <h1 th:text="${thread}"></h1>
-        <div>
-            <ul>
-                <li th:each="message : ${messages}">
-                    <span th:text="${message.content}">asd</span>
-                </li>
-            </ul>
+        <div class="container">
+            <div class="page-header page-heading">
+                <h1 class="pull-left"><span th:text="${thread}"></span></h1>
+                <ol class="breadcrumb pull-right where-am-i">
+                    <li><a href="/">Threads</a></li>
+                    <li class="active"><span th:text="${thread}"></span></li>
+                </ol>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="cell-stat"></th>
+                        <th>Sender</th>
+                        <th>Content</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="message: ${messages}">
+                        <td class="text-center"><i class="fa fa-question fa-2x text-primary"></i></td>
+                        <td class="hidden-xs hidden-sm"><span th:text="${message.sender.username}"></span></td>
+                        <td class="hidden-xs hidden-sm"><span th:text="${message.content}"></span></td>
+                        <td class="hidden-xs hidden-sm"><span th:text="${message.dateTime.toString()}"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <form role="form">
+                <div class="form-group">
+                    <label for="comment">Comment:</label>
+                    <textarea class="form-control" rows="5" id="comment" style="resize:none;"></textarea>
+                    <button type="button" class="btn btn-default">Send</button>
+                </div>
+            </form>
         </div>
     </body>
 </html>
