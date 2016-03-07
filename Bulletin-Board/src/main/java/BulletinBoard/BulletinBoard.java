@@ -217,6 +217,16 @@ public class BulletinBoard {
     public User getUser(int userId) throws SQLException {
         return users.findOne(userId);
     }
+    
+    /**
+     * Returns -1 if not found.
+     * @param name
+     * @return
+     * @throws SQLException 
+     */
+    public int getUserId(String name) throws SQLException {
+        return users.findIdByName(name);
+    }
 
     public List<User> getUsers() throws SQLException {
         return users.findAll();

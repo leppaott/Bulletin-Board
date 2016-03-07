@@ -47,7 +47,7 @@ public class ThreadDao {
     }
     
     public boolean editThread(int threadId, String name) throws SQLException {
-        int changes = database.update("UPDATE Thread SET name='?' WHERE threadId=?;",
+        int changes = database.update("UPDATE Thread SET name=? WHERE threadId=?;",
                 name, threadId);
         
         return changes != 0;

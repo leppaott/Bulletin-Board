@@ -11,6 +11,7 @@ import static spark.Spark.post;
 import spark.TemplateEngine;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import Domain.Thread;
+import Domain.User;
 import java.util.ArrayList;
 
 public class SparkInterface {
@@ -46,6 +47,7 @@ public class SparkInterface {
 
                 map.put("lastMessages", board.getMessagesIn(lastMsgs)); //useful to have Message for future
             } catch (NumberFormatException | SQLException e) {
+                res.status(404);
             }
 
             return new ModelAndView(map, "subforum");
@@ -53,22 +55,37 @@ public class SparkInterface {
 
         get("/thread", (req, res) -> { // /thread?id=1
             HashMap map = new HashMap<>();
-            int threadId = Integer.parseInt(req.queryParams("id"));
-            map.put("thread", board.getThread(threadId));
-            map.put("messages", board.getMessagesIn(threadId));
+
+            try {
+                int threadId = Integer.parseInt(req.queryParams("id"));
+                map.put("thread", board.getThread(threadId));
+                map.put("messages", board.getMessagesIn(threadId));
+            } catch (NumberFormatException | SQLException e) {
+                res.status(404);
+            }
 
             return new ModelAndView(map, "thread");
         }, templateEngine);
 
         post("/thread", (req, res) -> {
-            HashMap map = new HashMap<>();
-            int threadId = Integer.parseInt(req.queryParams("id"));
-            String username = req.queryParams("name");
-            String comment = req.queryParams("comment");
-            board.addUser(username);
-            //board.addMessage(threadId, 1, comment); // how to get userId?
-
-            return new ModelAndView(map, "thread");
-        }, templateEngine);
+            try {
+                int threadId = Integer.parseInt(req.queryParams("id"));
+                String username = req.queryParams("name");
+                String comment = req.queryParams("comment");
+                
+                int userId = board.getUserId(username);
+                if (userId == -1) {
+                    board.addUser(username);
+                    userId = board.getUserId(username);
+                }
+                
+                board.addMessage(threadId, userId, comment);
+                res.redirect("/thread?id=1");
+            } catch (NumberFormatException | SQLException e) {
+                res.status(404);
+            }
+            
+            return null;
+        });
     }
 }

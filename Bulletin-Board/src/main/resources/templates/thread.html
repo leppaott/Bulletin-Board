@@ -26,17 +26,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="message, iterStat: ${messages}">
+                    <tr th:each="message : ${messages}">
                         <td class="text-center"><i class="fa fa-question fa-2x text-primary"></i></td>
                         <td class="hidden-xs hidden-sm">
                             <span th:text="${'by ' + message.sender.username}"></span><br/>
-                            <span th:text="${'Time sent: ' + messages[iterStat.index]}"></span><br/>
+                            <span th:text="${'Time sent: ' + message}"></span><br/>
                             <span th:text="${message.content}"></span>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <form role="form" method="POST" action="/thread">
+            <form role="form" method="POST" th:action="${'/thread?id=' + thread.threadId}">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <textarea class="form-control" rows="1" cols="20" id="name" name="name" style="resize:none;"></textarea>

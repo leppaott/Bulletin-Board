@@ -61,7 +61,7 @@ public class Database {
 
     private PreparedStatement prepareStatement(String query, Object... params) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(query);
-
+        
         int i = 1;
         for (Object object : params) {
             if (object instanceof Collection) {
@@ -121,7 +121,7 @@ public class Database {
 
     public int update(String updateQuery, Object... params) throws SQLException {
         int changes;
-
+        
         try (PreparedStatement stmt = prepareStatement(updateQuery, params)) {
             changes = stmt.executeUpdate();
 
