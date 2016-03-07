@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title th:text="${thread}"></title>
+        <title th:text="${thread.name}"></title>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -36,11 +36,13 @@
                     </tr>
                 </tbody>
             </table>
-            <form role="form">
+            <form role="form" method="POST" action="/thread">
                 <div class="form-group">
+                    <label for="name">Name:</label>
+                    <textarea class="form-control" rows="1" cols="20" id="name" name="name" style="resize:none;"></textarea>
                     <label for="comment">Comment:</label>
-                    <textarea class="form-control" rows="5" id="comment" style="resize:none;"></textarea>
-                    <button type="button" class="btn btn-default">Send</button>
+                    <textarea class="form-control" rows="5" id="comment" name="comment" style="resize:none;"></textarea>
+                    <input type="submit" value="Post comment"/>
                 </div>
             </form>
         </div>
