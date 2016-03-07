@@ -6,6 +6,7 @@ public class Subforum {
     private String name;
     int postcount;
     private Message lastMessage;
+    private String lastPostTime;
 
     public Subforum(int forumId, String name, int postcount) {
         this.forumId = forumId;
@@ -31,5 +32,12 @@ public class Subforum {
     
     public void setLastMessage(Message lastMessage) {
         this.lastMessage = lastMessage;
+    }
+    
+    public String getLastPostTime() {
+        if(lastMessage != null) {
+            return lastMessage.getDateTime().toString();
+        }
+        return "";
     }
 }

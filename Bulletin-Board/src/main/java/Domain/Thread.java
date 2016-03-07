@@ -58,4 +58,5 @@ public class Thread {
     public void setForum(Subforum forum) {
         this.forum = forum;
     }
-}
+    
+ }

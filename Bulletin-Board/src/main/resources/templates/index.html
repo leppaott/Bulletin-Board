@@ -34,7 +34,7 @@
                                     <span th:text="${subforum.name}"></span></a></h4>
                         </td>
                         <td class="text-center hidden-xs hidden-sm"><span th:text="${subforum.postcount}"></span></td>
-                        <td class="hidden-xs hidden-sm">14-23-9999</td>
+                        <td class="hidden-xs hidden-sm"><span th:text="${subforum.getLastPostTime()}"></span></td>
                     </tr>
                 </tbody>
             </table>
