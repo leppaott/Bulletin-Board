@@ -13,31 +13,24 @@ public class Subforum {
         this.name = name;
         this.postcount = postcount;
     }
-    
+
     public int getForumId() {
         return forumId;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public int getPostcount() {
         return postcount;
     }
-    
+
     public Message getLastMessage() {
         return lastMessage;
     }
-    
+
     public void setLastMessage(Message lastMessage) {
         this.lastMessage = lastMessage;
-    }
-    
-    public String getLastPostTime() {
-        if(lastMessage != null) {
-            return lastMessage.getDateTime().toString();
-        }
-        return "";
     }
 }

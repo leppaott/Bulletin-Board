@@ -27,14 +27,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="thread: ${threads}">
+                    <tr th:each="thread, iterStat : ${threads}">
                         <td class="text-center"><i class="fa fa-question fa-2x text-primary"></i></td>
                         <td>
                             <h4><a href="thread.html" th:href="@{~/thread(id=${thread.threadId})}">
                                     <span th:text="${thread.name}"></span></a></h4>
                         </td>
                         <td class="text-center hidden-xs hidden-sm"><span th:text="${thread.postcount}"></span></td>
-                        <td class="hidden-xs hidden-sm"><span th:text="${thread.lastMessage}"></span></td>
+                        <td class="hidden-xs hidden-sm"><span th:text="${lastMessages[iterStat.index]}"></span></td>
                     </tr>
                 </tbody>
             </table>

@@ -51,4 +51,8 @@ public class Message {
     public void setSender(User user) {
         this.sender = user;
     }
+    
+    public String toString() {
+        return dateTime.toString().substring(0, 16);
+    }
 }

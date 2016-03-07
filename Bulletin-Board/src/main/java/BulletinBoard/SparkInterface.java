@@ -1,13 +1,17 @@
 package BulletinBoard;
 
+import Domain.Message;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import spark.ModelAndView;
 import spark.Spark;
 import static spark.Spark.get;
 import static spark.Spark.post;
 import spark.TemplateEngine;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
+import Domain.Thread;
+import java.util.ArrayList;
 
 public class SparkInterface {
     private final BulletinBoard board;
@@ -32,7 +36,14 @@ public class SparkInterface {
             try {
                 int forumId = Integer.parseInt(req.queryParams("id"));
                 map.put("subforum", board.getSubforum(forumId).getName());
-                map.put("threads", board.getThreadsIn(forumId));
+
+                List<Thread> threads = board.getThreadsIn(forumId);
+                map.put("threads", threads);
+                
+                List<Integer> lastMsgs = new ArrayList<>();
+                threads.forEach(t -> lastMsgs.add(((Thread)t).getLastMessage()));
+
+                map.put("lastMessages", board.getMessagesIn(lastMsgs)); //useful to have Message for future
             } catch(NumberFormatException | SQLException e) {}
 
             return new ModelAndView(map, "subforum");
