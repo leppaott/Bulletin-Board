@@ -22,17 +22,17 @@
                 <thead>
                     <tr>
                         <th class="cell-stat"></th>
-                        <th>Sender</th>
-                        <th>Content</th>
-                        <th>Time</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="message: ${messages}">
                         <td class="text-center"><i class="fa fa-question fa-2x text-primary"></i></td>
-                        <td class="hidden-xs hidden-sm"><span th:text="${message.sender.username}"></span></td>
-                        <td class="hidden-xs hidden-sm"><span th:text="${message.content}"></span></td>
-                        <td class="hidden-xs hidden-sm"><span th:text="${message.dateTime.toString()}"></span></td>
+                        <td class="hidden-xs hidden-sm">
+                            <span th:text="${'by ' + message.sender.username}"></span><br/>
+                            <span th:text="${'Time sent: ' + message.dateTime.toString()}"></span><br/>
+                            <span th:text="${message.content}"></span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
