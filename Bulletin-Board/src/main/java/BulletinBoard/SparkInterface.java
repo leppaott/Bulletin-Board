@@ -52,7 +52,7 @@ public class SparkInterface {
         get("/thread", (req, res) -> { // /thread?id=1
             HashMap map = new HashMap<>();
             int threadId = Integer.parseInt(req.queryParams("id"));
-            map.put("thread", board.getThread(threadId).getName());
+            map.put("thread", board.getThread(threadId));
             map.put("messages", board.getMessagesIn(threadId));
             
             return new ModelAndView(map, "thread");
