@@ -57,7 +57,7 @@ public class MessageDao {
     }
 
     public boolean editMessage(int messageId, String newContent) throws SQLException {
-        int changes = database.update("UPDATE Message SET content='?' WHERE messageId=?;",
+        int changes = database.update("UPDATE Message SET content=? WHERE messageId=?;",
                 newContent, messageId);
 
         return changes != 0;

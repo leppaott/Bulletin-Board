@@ -19,7 +19,7 @@ public class UserDao {
         long dateTime = System.currentTimeMillis();
 
         int userId = database.insert("INSERT INTO User (username, joinDate, postcount)"
-                + " VALUES('?', ?, 0);", name, dateTime);
+                + " VALUES(?, ?, 0);", name, dateTime);
 
         return userId;
     }
@@ -32,7 +32,7 @@ public class UserDao {
     }
 
     public boolean editUser(int userId, String name) throws SQLException {
-        int changes = database.update("UPDATE User SET username='?' WHERE userId=?;",
+        int changes = database.update("UPDATE User SET username=? WHERE userId=?;",
                 name, userId);
 
         return changes != 0;
@@ -40,7 +40,7 @@ public class UserDao {
 
     public int findIdByName(String name) throws SQLException {
         List<Integer> row = database.queryAndCollect(
-                "SELECT userId FROM User WHERE username='?';", rs -> {
+                "SELECT userId FROM User WHERE username=?;", rs -> {
                     return rs.getInt("userId");
                 }, name);
         return !row.isEmpty() ? row.get(0) : -1;
