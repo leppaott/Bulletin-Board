@@ -56,7 +56,7 @@ public class SparkInterface {
     }
     
     public void start() throws Exception {
-        createDb();
+        
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();
             map.put("subforums", board.getSubforums());
@@ -111,7 +111,7 @@ public class SparkInterface {
                 }
 
                 board.addMessage(threadId, userId, comment);
-                res.redirect("/thread?id=1");
+                res.redirect("/thread?id=" + threadId);
             } catch (NumberFormatException | SQLException e) {
                 res.status(404);
             }
