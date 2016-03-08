@@ -71,6 +71,8 @@ public class SparkInterface {
                 int forumId = Integer.parseInt(req.queryParams("id"));
                 map.put("subforum", board.getSubforum(forumId).getName());
                 
+                map.put("subforumIds", board.getSubforum(forumId));
+                
                 List<Thread> threads = board.getThreadsIn(forumId);
                 map.put("threads", threads);
 
@@ -121,15 +123,22 @@ public class SparkInterface {
 
         get("/addthread", (req, res) -> {   // /addthread
             HashMap map = new HashMap<>();
+            int forumId = Integer.parseInt(req.queryParams("id"));
+            map.put("subforum", board.getSubforum(forumId));
             return new ModelAndView(map, "addthread");
         }, templateEngine);
 
         post("/addthread", (req, res) -> {
             int forumId = Integer.parseInt(req.queryParams("id"));
+            
             String title = req.queryParams("title");
+            String username = req.queryParams("name");
             String message = req.queryParams("message");
-
-            board.addThread(forumId, 0, title);
+            
+            board.addThread(forumId, board.getUserId(username), title);
+            board.addMessage(0, forumId, message);
+            res.redirect("/subforum?id=" + forumId);
+            
             return null;
         });
     }

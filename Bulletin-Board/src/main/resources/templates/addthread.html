@@ -11,16 +11,27 @@
     <body>
         <div class="container">
             <div class="page-header page-heading">
-                <h1>Add Thread</h1>
+                
+                <ol class="breadcrumb pull-right where-am-i">
+                    <li><a href="/">Subforums</a></li>
+                </ol>
             </div>
             
-            <form role="form">
+            <div class="page-header page-heading">
+                <h1>Add thread to <span th:text="${subforum.name}"></span></h1>
+            </div>
+            
+            <form role="form" method="POST" th:action="${'/addthread?id=' + subforum.forumId}">
                 <div class="form-group">
-                    <label for="Title">Title:</label>
-                    <input type="text" class="form-control" style="resize:none;"></input>
-                    <label for="Message">Message:</label>
+                    <label for="title">Title:</label>
+                    <textarea class="form-control" rows="1" cols="20" id="name" name="name" style="resize:none;"></textarea>
+                    
+                    <label for="name">User:</label>
+                    <textarea class="form-control" rows="1" cols="20" id="name" name="name" style="resize:none;"></textarea>
+                    
+                    <label for="message">Message:</label>
                     <textarea class="form-control" rows="5" id="message" style="resize:none;"></textarea>
-                    <button type="button" class="btn btn-default">Send</button>
+                    <input type="submit" value="Post thread"/>
                 </div>
             </form>
         </div>
