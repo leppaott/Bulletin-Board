@@ -69,9 +69,7 @@ public class SparkInterface {
 
             try {
                 int forumId = Integer.parseInt(req.queryParams("id"));
-                map.put("subforum", board.getSubforum(forumId).getName());
-                
-                map.put("subforumIds", board.getSubforum(forumId));
+                map.put("subforum", board.getSubforum(forumId));
                 
                 List<Thread> threads = board.getThreadsIn(forumId);
                 map.put("threads", threads);
@@ -135,9 +133,9 @@ public class SparkInterface {
             String username = req.queryParams("name");
             String message = req.queryParams("message");
             
-            board.addThread(forumId, board.getUserId(username), title);
-            board.addMessage(0, forumId, message);
-            res.redirect("/subforum?id=" + forumId);
+            int threadId = board.addThread(forumId, board.getUserId(username), title);
+            board.addMessage(threadId, forumId, message);
+            res.redirect("/thread?id=" + threadId);
             
             return null;
         });

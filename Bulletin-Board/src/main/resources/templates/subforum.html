@@ -11,7 +11,7 @@
     <body>
         <div class="container">
             <div class="page-header page-heading">
-                <h1 class="pull-left"><span th:text="${subforum}"></span></h1>
+                <h1 class="pull-left"><span th:text="${subforum.name}"></span></h1>
                 
                 <ol class="breadcrumb pull-right where-am-i">
                     <li><a href="/">Subforums</a></li>
@@ -19,7 +19,7 @@
                 </ol>
             </div>
             
-            <h4><a th:href="@{~/addthread(id=${subforumIds.forumId})}">
+            <h4><a th:href="@{~/addthread(id=${subforum.forumId})}">
                         <span>Add thread</span></a></h4>
                 
             <table class="table table-striped">
