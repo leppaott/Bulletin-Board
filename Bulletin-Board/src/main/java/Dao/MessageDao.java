@@ -18,14 +18,16 @@ public class MessageDao {
     private final Database database;
     private ThreadDao threadDao;
     private UserDao userDao;
+    private SubforumDao forumDao;
 
     public MessageDao(Database database) {
         this.database = database;
     }
 
-    public void initDaos(ThreadDao threadDao, UserDao userDao) {
+    public void initDaos(ThreadDao threadDao, UserDao userDao, SubforumDao forumDao) {
         this.threadDao = threadDao;
         this.userDao = userDao;
+        this.forumDao = forumDao;
     }
 
     public int addMessage(int threadId, int senderId, String content) throws SQLException {
@@ -52,6 +54,8 @@ public class MessageDao {
         if (!edited) {
             return -1;
         }
+        
+        forumDao.increasePostcount(thread.getForum().getForumId());
 
         return messageId;
     }

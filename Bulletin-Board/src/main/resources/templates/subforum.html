@@ -1,7 +1,7 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title th:text="${subforum}"></title>
+        <title th:text="${subforum.name}"></title>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -19,8 +19,9 @@
                 </ol>
             </div>
             
-            <h4><a th:href="@{~/addthread(id=${subforum.forumId})}">
-                        <span>Add thread</span></a></h4>
+            <a class="btn btn-default" th:href="@{~/addthread(id=${subforum.forumId})}" role="button">
+                <span>Add thread</span>
+            </a>
                 
             <table class="table table-striped">
                 

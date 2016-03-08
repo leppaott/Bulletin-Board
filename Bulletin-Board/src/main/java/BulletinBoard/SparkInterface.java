@@ -27,12 +27,12 @@ public class SparkInterface {
     public void createDb() throws Exception {
         board.createTable("Subforum", "forumId integer PRIMARY KEY, name text, postcount integer");
         board.createTable("Thread", "threadId integer PRIMARY KEY, forumId integer, sender integer, "
-           + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
-           + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), " 
-           + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
+                + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
+                + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
+                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
         board.createTable("Message", "messageId integer PRIMARY KEY, threadId integer, sender integer, "
-            + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
-            + "FOREIGN KEY(sender) REFERENCES User(userId)");
+                + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
+                + "FOREIGN KEY(sender) REFERENCES User(userId)");
         board.createTable("User", "userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer");
 
         board.addUser("Arto");
@@ -54,9 +54,9 @@ public class SparkInterface {
         board.addMessage(3, 3, "LISP<3");
         board.addMessage(4, 3, "LISP<<<<<<");
     }
-    
+
     public void start() throws Exception {
-        
+        createDb();
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();
             map.put("subforums", board.getSubforums());
@@ -70,13 +70,13 @@ public class SparkInterface {
             try {
                 int forumId = Integer.parseInt(req.queryParams("id"));
                 map.put("subforum", board.getSubforum(forumId));
-                
+
                 List<Thread> threads = board.getThreadsIn(forumId);
                 map.put("threads", threads);
 
                 List<Integer> lastMsgs = new ArrayList<>();
                 threads.forEach(t -> lastMsgs.add(((Thread) t).getLastMessage()));
-                
+
                 map.put("lastMessages", board.getMessagesIn(lastMsgs)); //useful to have Message for future
             } catch (NumberFormatException | SQLException e) {
                 res.status(404);
@@ -121,22 +121,37 @@ public class SparkInterface {
 
         get("/addthread", (req, res) -> {   // /addthread
             HashMap map = new HashMap<>();
-            int forumId = Integer.parseInt(req.queryParams("id"));
-            map.put("subforum", board.getSubforum(forumId));
+
+            try {
+                int forumId = Integer.parseInt(req.queryParams("id"));
+                map.put("subforum", board.getSubforum(forumId));
+            } catch (NumberFormatException | SQLException e) {
+                res.status(404);
+            }
+
             return new ModelAndView(map, "addthread");
         }, templateEngine);
 
         post("/addthread", (req, res) -> {
-            int forumId = Integer.parseInt(req.queryParams("id"));
-            
-            String title = req.queryParams("title");
-            String username = req.queryParams("name");
-            String message = req.queryParams("message");
-            
-            int threadId = board.addThread(forumId, board.getUserId(username), title);
-            board.addMessage(threadId, forumId, message);
-            res.redirect("/thread?id=" + threadId);
-            
+            try {
+                int forumId = Integer.parseInt(req.queryParams("id"));
+
+                String title = req.queryParams("title");
+                String username = req.queryParams("username");
+                String message = req.queryParams("message");
+                
+                int userId = board.getUserId(username);
+                if (userId == -1) {
+                    userId = board.addUser(username);
+                }
+
+                int threadId = board.addThread(forumId, userId, title);
+                board.addMessage(threadId, userId, message);
+                res.redirect("/thread?id=" + threadId);
+            } catch (NumberFormatException | SQLException e) {
+                res.status(404);
+            }
+
             return null;
         });
     }

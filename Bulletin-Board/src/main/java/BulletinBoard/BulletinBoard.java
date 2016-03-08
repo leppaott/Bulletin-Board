@@ -30,7 +30,7 @@ public class BulletinBoard {
         users = new UserDao(database);
 
         threads.initDaos(users, messages, subforums);
-        messages.initDaos(threads, users);
+        messages.initDaos(threads, users, subforums);
     }
 
     public void createTable(String table, String statement) throws SQLException {
@@ -48,7 +48,7 @@ public class BulletinBoard {
     public int addSubforum(String forumName) throws SQLException {
         return subforums.addSubforum(forumName);
     }
-
+    
     public Subforum getSubforum(int forumId) throws SQLException {
         return subforums.findOne(forumId);
     }

@@ -13,7 +13,7 @@
             <div class="page-header page-heading">
                 <h1 class="pull-left"><span th:text="${thread.name}"></span></h1>
                 <ol class="breadcrumb pull-right where-am-i">
-                    <li><a href="subforum.html" th:href="@{~/subforum(id=${thread.forum.forumId})}">Threads</a></li>
+                    <li><a th:href="@{~/subforum(id=${thread.forum.forumId})}">Threads</a></li>
                     <li class="active"><span th:text="${thread.name}"></span></li>
                 </ol>
             </div>

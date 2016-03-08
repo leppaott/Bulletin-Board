@@ -1,8 +1,7 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
     <head>
-        <title th:text="${addthread}"></title>
+        <title th:text="${subforum.name}"></title>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -11,30 +10,28 @@
     <body>
         <div class="container">
             <div class="page-header page-heading">
-                
                 <ol class="breadcrumb pull-right where-am-i">
-                    <li><a href="/">Subforums</a></li>
+                    <li><a th:href="@{~/subforum(id=${subforum.forumId})}"><span th:text="${subforum.name}"></span></a></li>
                 </ol>
             </div>
-            
+
             <div class="page-header page-heading">
-                <h1>Add thread to <span th:text="${subforum.name}"></span></h1>
+                <h1>Post New Thread To <span th:text="${subforum.name}"></span></h1>
             </div>
-            
+
             <form role="form" method="POST" th:action="${'/addthread?id=' + subforum.forumId}">
                 <div class="form-group">
                     <label for="title">Title:</label>
-                    <textarea class="form-control" rows="1" cols="20" id="name" name="name" style="resize:none;"></textarea>
-                    
-                    <label for="name">User:</label>
-                    <textarea class="form-control" rows="1" cols="20" id="name" name="name" style="resize:none;"></textarea>
-                    
+                    <textarea class="form-control" rows="1" cols="20" id="title" name="title" style="resize:none;"></textarea>
+
+                    <label for="username">User:</label>
+                    <textarea class="form-control" rows="1" cols="20" id="username" name="username" style="resize:none;"></textarea>
+
                     <label for="message">Message:</label>
-                    <textarea class="form-control" rows="5" id="message" style="resize:none;"></textarea>
-                    <input type="submit" value="Post thread"/>
+                    <textarea class="form-control" rows="5" id="message" name="message" style="resize:none;"></textarea>
+                    <input type="submit" value="Submit New Thread"/>
                 </div>
             </form>
         </div>
     </body>
-    
 </html>

@@ -13,11 +13,17 @@ public class SubforumDao {
     public SubforumDao(Database database) {
         this.database = database;
     }
-    
+
     public int addSubforum(String name) throws SQLException {
         int forumId = database.insert("INSERT INTO Subforum (name, postcount) VALUES(?, 0);", name);
-        
+
         return forumId;
+    }
+
+    public boolean increasePostcount(int forumId) throws SQLException {
+        int changes = database.update("UPDATE Subforum SET postcount=postcount+1 WHERE forumId=?;", forumId);
+
+        return changes != 0;
     }
 
     public Subforum findOne(int forumId) throws SQLException {
