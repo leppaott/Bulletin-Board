@@ -1,0 +1,29 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title th:text="${addthread}"></title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-header page-heading">
+                <h1>Add Thread</h1>
+            </div>
+            
+            <form role="form">
+                <div class="form-group">
+                    <label for="Title">Title:</label>
+                    <input type="text" class="form-control" style="resize:none;"></input>
+                    <label for="Message">Message:</label>
+                    <textarea class="form-control" rows="5" id="message" style="resize:none;"></textarea>
+                    <button type="button" class="btn btn-default">Send</button>
+                </div>
+            </form>
+        </div>
+    </body>
+    
+</html>

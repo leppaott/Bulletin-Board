@@ -87,5 +87,20 @@ public class SparkInterface {
             
             return null;
         });
+        
+        get("/addthread", (req, res) -> {   // /addthread
+            HashMap map = new HashMap<>();
+            return new ModelAndView(map, "addthread");
+        }, templateEngine); 
+        
+        post("/addthread", (req, res)  -> {
+            
+            int forumId = Integer.parseInt(req.queryParams("id"));
+            String title = req.queryParams("title");
+            String message = req.queryParams("message");
+            
+            board.addThread(forumId, 0, title);
+            return null;
+        });
     }
 }

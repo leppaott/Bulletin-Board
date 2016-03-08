@@ -35,7 +35,8 @@ public class ThreadDao {
         
         int changes = database.update("INSERT INTO Thread (forumId, sender, dateTime, name, postcount)"
                 + " VALUES(?, ?, ?, ?, 0);", forumId, senderId, dateTime, name); 
-
+     
+        
         return changes != 0;         
     }
     
