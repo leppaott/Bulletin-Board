@@ -25,6 +25,9 @@ public class SparkInterface {
     }
 
     public void start() throws Exception {
+        System.out.println("messageId " + board.addMessage(3, 2, "asd"));
+        //exception^^
+        
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();
             map.put("subforums", board.getSubforums());
@@ -72,11 +75,10 @@ public class SparkInterface {
                 int threadId = Integer.parseInt(req.queryParams("id"));
                 String username = req.queryParams("name");
                 String comment = req.queryParams("comment");
-                
+
                 int userId = board.getUserId(username);
                 if (userId == -1) {
-                    board.addUser(username);
-                    userId = board.getUserId(username);
+                    userId = board.addUser(username);
                 }
                 
                 board.addMessage(threadId, userId, comment);
@@ -93,8 +95,7 @@ public class SparkInterface {
             return new ModelAndView(map, "addthread");
         }, templateEngine); 
         
-        post("/addthread", (req, res)  -> {
-            
+        post("/addthread", (req, res)  -> {          
             int forumId = Integer.parseInt(req.queryParams("id"));
             String title = req.queryParams("title");
             String message = req.queryParams("message");

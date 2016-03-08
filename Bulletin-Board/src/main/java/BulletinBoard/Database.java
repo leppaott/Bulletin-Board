@@ -25,15 +25,15 @@ public class Database {
         this.connection = getConnection(address);
         this.factory = RowSetProvider.newFactory();
     }
-    
+
     private Connection getConnection(String address) throws SQLException {
         if (address.contains("postgres")) {
             try {
                 URI dbUri = new URI(address);
-                
+
                 String username = dbUri.getUserInfo().split(":")[0];
                 String password = dbUri.getUserInfo().split(":")[1];
-                String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' 
+                String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':'
                         + dbUri.getPort() + dbUri.getPath();
 
                 return DriverManager.getConnection(dbUrl, username, password);
@@ -59,9 +59,7 @@ public class Database {
         return params.toString();
     }
 
-    private PreparedStatement prepareStatement(String query, Object... params) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement(query);
-        
+    private void handleParams(PreparedStatement stmt, Object... params) throws SQLException {
         int i = 1;
         for (Object object : params) {
             if (object instanceof Collection) {
@@ -72,6 +70,12 @@ public class Database {
                 stmt.setObject(i++, object);
             }
         }
+    }
+
+    private PreparedStatement prepareStatement(String query, Object... params) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement(query);
+
+        handleParams(stmt, params);
 
         return stmt;
     }
@@ -121,7 +125,7 @@ public class Database {
 
     public int update(String updateQuery, Object... params) throws SQLException {
         int changes;
-        
+
         try (PreparedStatement stmt = prepareStatement(updateQuery, params)) {
             changes = stmt.executeUpdate();
 
@@ -134,6 +138,20 @@ public class Database {
         }
 
         return changes;
+    }
+    
+    public int insert(String insertQuery, Object... params) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
+            handleParams(stmt, params);          
+            stmt.executeUpdate();
+            
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1); //id
+            }
+        }
+        
+        return -1;
     }
 
     private void debug(ResultSet rs) throws SQLException {

@@ -15,13 +15,19 @@ public class UserDao {
         this.database = database;
     }
 
-    public boolean addUser(String name) throws SQLException {
+    public int addUser(String name) throws SQLException {
         long dateTime = System.currentTimeMillis();
 
-        int changes = database.update("INSERT INTO User (username, joinDate, postcount)"
-                + " VALUES(?, ?, 0);", name, dateTime);
+        int userId = -1;
+        try {
+            userId = database.insert("INSERT INTO User (username, joinDate, postcount)"
+                + " VALUES('?', ?, 0);", name, dateTime);
+        } catch (Exception e) {
+            System.out.println("EXCEPTION ADDUSER");
+            e.printStackTrace();
+        }
 
-        return changes != 0;
+        return userId;
     }
 
     public boolean editUser(int userId, int postcount) throws SQLException {
@@ -32,7 +38,7 @@ public class UserDao {
     }
 
     public boolean editUser(int userId, String name) throws SQLException {
-        int changes = database.update("UPDATE User SET username=? WHERE userId=?;",
+        int changes = database.update("UPDATE User SET username='?' WHERE userId=?;",
                 name, userId);
 
         return changes != 0;
@@ -40,7 +46,7 @@ public class UserDao {
 
     public int findIdByName(String name) throws SQLException {
         List<Integer> row = database.queryAndCollect(
-                "SELECT userId FROM User WHERE username=?;", rs -> {
+                "SELECT userId FROM User WHERE username='?';", rs -> {
                     return rs.getInt("userId");
                 }, name);
         return !row.isEmpty() ? row.get(0) : -1;

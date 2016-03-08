@@ -30,14 +30,13 @@ public class ThreadDao {
         this.forumDao = forumDao;
     }
     
-    public boolean addThread(int forumId, int senderId, String name) throws SQLException {
+    public int addThread(int forumId, int senderId, String name) throws SQLException {
         long dateTime = System.currentTimeMillis();
         
-        int changes = database.update("INSERT INTO Thread (forumId, sender, dateTime, name, postcount)"
-                + " VALUES(?, ?, ?, ?, 0);", forumId, senderId, dateTime, name); 
+        int threadId = database.insert("INSERT INTO Thread (forumId, sender, dateTime, name, "
+                + "postcount) VALUES(?, ?, ?, '?', 0);", forumId, senderId, dateTime, name); 
      
-        
-        return changes != 0;         
+        return threadId;
     }
     
     public boolean editThread(int threadId, int lastMessageId, int postcount) throws SQLException {
@@ -48,7 +47,7 @@ public class ThreadDao {
     }
     
     public boolean editThread(int threadId, String name) throws SQLException {
-        int changes = database.update("UPDATE Thread SET name=? WHERE threadId=?;",
+        int changes = database.update("UPDATE Thread SET name='?' WHERE threadId=?;",
                 name, threadId);
         
         return changes != 0;

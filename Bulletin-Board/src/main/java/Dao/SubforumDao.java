@@ -14,10 +14,10 @@ public class SubforumDao {
         this.database = database;
     }
     
-    public boolean addSubforum(String name) throws SQLException {
-        int changes = database.update("INSERT INTO Subforum (name, postcount) VALUES(?, 0);", name);
+    public int addSubforum(String name) throws SQLException {
+        int forumId = database.insert("INSERT INTO Subforum (name, postcount) VALUES(?, 0);", name);
         
-        return changes != 0;
+        return forumId;
     }
 
     public Subforum findOne(int forumId) throws SQLException {

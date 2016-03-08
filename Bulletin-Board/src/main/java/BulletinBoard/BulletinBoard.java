@@ -35,13 +35,13 @@ public class BulletinBoard {
 
     //subforums
     /**
-     * Adds a new subforum with a given name.
+     * Adds a new subforum with a given name. Returns forumId.
      *
      * @param forumName
-     * @return
+     * @return forumId
      * @throws SQLException
      */
-    public boolean addSubforum(String forumName) throws SQLException {
+    public int addSubforum(String forumName) throws SQLException {
         return subforums.addSubforum(forumName);
     }
 
@@ -71,15 +71,15 @@ public class BulletinBoard {
 
     //messages
     /**
-     * Adds a new message into the database.
+     * Adds a new message into the database. Returns messageId.
      *
      * @param threadId
      * @param senderId
      * @param content
-     * @return
+     * @return messageId
      * @throws SQLException
      */
-    public boolean addMessage(int threadId, int senderId, String content) throws SQLException {
+    public int addMessage(int threadId, int senderId, String content) throws SQLException {
         return messages.addMessage(threadId, senderId, content);
     }
 
@@ -125,15 +125,15 @@ public class BulletinBoard {
 
     //threads
     /**
-     * Adds a new thread with a given sender and name.
+     * Adds a new thread with a given sender and name. Returns threadId.
      *
      * @param forumId
      * @param senderId
      * @param name
-     * @return
+     * @return threadId
      * @throws SQLException
      */
-    public boolean addThread(int forumId, int senderId, String name) throws SQLException {
+    public int addThread(int forumId, int senderId, String name) throws SQLException {
         return threads.addThread(forumId, senderId, name);
     }
 
@@ -180,13 +180,13 @@ public class BulletinBoard {
 
     //users
     /**
-     * Adds a new user with a given name.
+     * Adds a new user with a given name. Returns userId.
      *
      * @param name
-     * @return
+     * @return userId
      * @throws SQLException
      */
-    public boolean addUser(String name) throws SQLException {
+    public int addUser(String name) throws SQLException {
         return users.addUser(name);
     }
 

@@ -28,11 +28,11 @@ public class MessageDao {
         this.userDao = userDao;
     }
 
-    public boolean addMessage(int threadId, int senderId, String content) throws SQLException {
+    public int addMessage(int threadId, int senderId, String content) throws SQLException {
         Thread thread = threadDao.findOne(threadId);
 
         if (thread == null) {
-            return false;
+            return -1;
         }
 
         Message lastMsg = findOne(thread.getLastMessage());
@@ -43,25 +43,29 @@ public class MessageDao {
         }
 
         long dateTime = System.currentTimeMillis();
-
+        
+        int messageId = -1;
         try {
-            database.update("INSERT INTO Message (threadId, sender, order, dateTime, content) "
-                    + "VALUES(?, ?, ?, ?, ?);", threadId, senderId, order, dateTime, content);
+           messageId = database.insert("INSERT INTO Message (threadId, sender, order, "
+                   + "dateTime, content) VALUES (?, ?, ?, ?, '?');", threadId, senderId, 
+                   order, dateTime, content);
         } catch (Exception e) {
+            System.out.println("EXCEPTION ADDMESSAGE");
             e.printStackTrace();
         }
 
-        Message newLastMsg = findOne(threadId, order);
 
-        if (newLastMsg == null) {
-            return false;
+        boolean edited = threadDao.editThread(threadId, messageId, thread.getPostcount() + 1);
+    
+        if (!edited) {
+            return -1;
         }
-
-        return threadDao.editThread(threadId, newLastMsg.getMessageId(), thread.getPostcount() + 1);
+        
+        return messageId;
     }
 
     public boolean editMessage(int messageId, String newContent) throws SQLException {
-        int changes = database.update("UPDATE Message SET content=? WHERE messageId=?;",
+        int changes = database.update("UPDATE Message SET content='?' WHERE messageId=?;",
                 newContent, messageId);
 
         return changes != 0;
