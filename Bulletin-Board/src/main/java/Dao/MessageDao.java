@@ -46,9 +46,9 @@ public class MessageDao {
         
         int messageId = -1;
         try {
-           messageId = database.insert("INSERT INTO Message (threadId, sender, order, "
-                   + "dateTime, content) VALUES (?, ?, ?, ?, '?');", threadId, senderId, 
-                   order, dateTime, content);
+           messageId = database.insert(
+                   "INSERT INTO Message (threadId, sender, order, dateTime, content)" 
+                           + "VALUES (?, ?, ?, ?, ?);", threadId, senderId, order, dateTime, content);
         } catch (Exception e) {
             System.out.println("EXCEPTION ADDMESSAGE");
             e.printStackTrace();

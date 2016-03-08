@@ -25,6 +25,7 @@ public class SparkInterface {
     }
 
     public void start() throws Exception {
+        //board.addThread(2, 1, "asd");
         System.out.println("messageId " + board.addMessage(3, 2, "asd"));
         //exception^^
         

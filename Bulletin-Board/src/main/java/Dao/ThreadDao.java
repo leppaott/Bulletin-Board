@@ -33,8 +33,9 @@ public class ThreadDao {
     public int addThread(int forumId, int senderId, String name) throws SQLException {
         long dateTime = System.currentTimeMillis();
         
-        int threadId = database.insert("INSERT INTO Thread (forumId, sender, dateTime, name, "
-                + "postcount) VALUES(?, ?, ?, '?', 0);", forumId, senderId, dateTime, name); 
+        int threadId = database.insert("INSERT INTO Thread (forumId, sender,"
+                + " dateTime, name, postcount) VALUES(?, ?, ?, ?, ?);", 
+                forumId, senderId, dateTime, name, 0); 
      
         return threadId;
     }

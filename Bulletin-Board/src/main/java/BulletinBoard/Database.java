@@ -139,18 +139,18 @@ public class Database {
 
         return changes;
     }
-    
+
     public int insert(String insertQuery, Object... params) throws SQLException {
         try (PreparedStatement stmt = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
-            handleParams(stmt, params);          
+            handleParams(stmt, params);
             stmt.executeUpdate();
-            
+
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 return rs.getInt(1); //id
             }
         }
-        
+
         return -1;
     }
 
