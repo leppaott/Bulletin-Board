@@ -24,8 +24,39 @@ public class SparkInterface {
         this.templateEngine = new ThymeleafTemplateEngine();
     }
 
-    public void start() throws Exception {
+    public void createDb() throws Exception {
+        board.createTable("Subforum", "forumId integer PRIMARY KEY, name text, postcount integer");
+        board.createTable("Thread", "threadId integer PRIMARY KEY, forumId integer, sender integer, "
+           + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
+           + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), " 
+           + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
+        board.createTable("Message", "messageId integer PRIMARY KEY, threadId integer, sender integer, "
+            + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
+            + "FOREIGN KEY(sender) REFERENCES User(userId)");
+        board.createTable("User", "userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer");
 
+        board.addUser("Arto");
+        board.addUser("Matti");
+        board.addUser("Ada");
+        board.addSubforum("Ohjelmointi");
+        board.addSubforum("Lemmikit");
+        board.addSubforum("Lentokoneet");
+        board.addThread(1, 1, "Java on jees");
+        board.addThread(1, 1, "Python on jeesimpi");
+        board.addThread(1, 2, "LISP on parempi kuin");
+        board.addThread(1, 3, "Ohjelmointikielet on turhia");
+        board.addMessage(1, 1, "Mun mielestä Java on just hyvä kieli.");
+        board.addMessage(1, 2, "No eipäs, Ruby on parempi.");
+        board.addMessage(1, 3, "Ada on selkeästi parempi kuin kumpikin noista.");
+        board.addMessage(1, 1, "Mun mielestä Java on just hyvä kieli.");
+        board.addMessage(2, 1, "Python rulaa :)");
+        board.addMessage(3, 3, "LISP<3");
+        board.addMessage(3, 3, "LISP<3");
+        board.addMessage(4, 3, "LISP<<<<<<");
+    }
+    
+    public void start() throws Exception {
+        createDb();
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();
             map.put("subforums", board.getSubforums());
@@ -39,13 +70,13 @@ public class SparkInterface {
             try {
                 int forumId = Integer.parseInt(req.queryParams("id"));
                 map.put("subforum", board.getSubforum(forumId).getName());
-
+                
                 List<Thread> threads = board.getThreadsIn(forumId);
                 map.put("threads", threads);
 
                 List<Integer> lastMsgs = new ArrayList<>();
                 threads.forEach(t -> lastMsgs.add(((Thread) t).getLastMessage()));
-
+                
                 map.put("lastMessages", board.getMessagesIn(lastMsgs)); //useful to have Message for future
             } catch (NumberFormatException | SQLException e) {
                 res.status(404);

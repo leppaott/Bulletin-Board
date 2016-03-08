@@ -33,6 +33,10 @@ public class BulletinBoard {
         messages.initDaos(threads, users);
     }
 
+    public void createTable(String table, String statement) throws SQLException {
+        database.update("CREATE TABLE " + table + "(" + statement + ");");
+    }
+    
     //subforums
     /**
      * Adds a new subforum with a given name. Returns forumId.
