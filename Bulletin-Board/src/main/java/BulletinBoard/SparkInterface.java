@@ -25,10 +25,7 @@ public class SparkInterface {
     }
 
     public void start() throws Exception {
-        //board.addThread(2, 1, "asd");
-        System.out.println("messageId " + board.addMessage(3, 2, "asd"));
-        //exception^^
-        
+
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();
             map.put("subforums", board.getSubforums());
@@ -81,26 +78,26 @@ public class SparkInterface {
                 if (userId == -1) {
                     userId = board.addUser(username);
                 }
-                
+
                 board.addMessage(threadId, userId, comment);
                 res.redirect("/thread?id=1");
             } catch (NumberFormatException | SQLException e) {
                 res.status(404);
             }
-            
+
             return null;
         });
-        
+
         get("/addthread", (req, res) -> {   // /addthread
             HashMap map = new HashMap<>();
             return new ModelAndView(map, "addthread");
-        }, templateEngine); 
-        
-        post("/addthread", (req, res)  -> {          
+        }, templateEngine);
+
+        post("/addthread", (req, res) -> {
             int forumId = Integer.parseInt(req.queryParams("id"));
             String title = req.queryParams("title");
             String message = req.queryParams("message");
-            
+
             board.addThread(forumId, 0, title);
             return null;
         });

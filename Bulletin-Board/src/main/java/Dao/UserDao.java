@@ -18,14 +18,8 @@ public class UserDao {
     public int addUser(String name) throws SQLException {
         long dateTime = System.currentTimeMillis();
 
-        int userId = -1;
-        try {
-            userId = database.insert("INSERT INTO User (username, joinDate, postcount)"
+        int userId = database.insert("INSERT INTO User (username, joinDate, postcount)"
                 + " VALUES('?', ?, 0);", name, dateTime);
-        } catch (Exception e) {
-            System.out.println("EXCEPTION ADDUSER");
-            e.printStackTrace();
-        }
 
         return userId;
     }

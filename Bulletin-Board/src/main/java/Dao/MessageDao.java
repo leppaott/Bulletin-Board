@@ -43,24 +43,16 @@ public class MessageDao {
         }
 
         long dateTime = System.currentTimeMillis();
-        
-        int messageId = -1;
-        try {
-           messageId = database.insert(
-                   "INSERT INTO Message (threadId, sender, order, dateTime, content)" 
-                           + "VALUES (?, ?, ?, ?, ?);", threadId, senderId, order, dateTime, content);
-        } catch (Exception e) {
-            System.out.println("EXCEPTION ADDMESSAGE");
-            e.printStackTrace();
-        }
 
+        int messageId = database.insert("INSERT INTO Message (threadId, sender, 'order', dateTime, content)"
+                + " VALUES (?, ?, ?, ?, ?);", threadId, senderId, order, dateTime, content);
 
         boolean edited = threadDao.editThread(threadId, messageId, thread.getPostcount() + 1);
-    
+
         if (!edited) {
             return -1;
         }
-        
+
         return messageId;
     }
 
