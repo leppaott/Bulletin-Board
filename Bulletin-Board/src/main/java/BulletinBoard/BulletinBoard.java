@@ -36,7 +36,7 @@ public class BulletinBoard {
     public void createTable(String table, String statement) throws SQLException {
         database.update("CREATE TABLE " + table + "(" + statement + ");");
     }
-    
+
     //subforums
     /**
      * Adds a new subforum with a given name. Returns forumId.
@@ -48,7 +48,7 @@ public class BulletinBoard {
     public int addSubforum(String forumName) throws SQLException {
         return subforums.addSubforum(forumName);
     }
-    
+
     public Subforum getSubforum(int forumId) throws SQLException {
         return subforums.findOne(forumId);
     }
@@ -84,7 +84,8 @@ public class BulletinBoard {
      * @throws SQLException
      */
     public int addMessage(int threadId, int senderId, String content) throws SQLException {
-        return messages.addMessage(threadId, senderId, content);
+        int messageId = messages.addMessage(threadId, senderId, content);
+        return messageId;
     }
 
     /**
@@ -221,12 +222,13 @@ public class BulletinBoard {
     public User getUser(int userId) throws SQLException {
         return users.findOne(userId);
     }
-    
+
     /**
      * Returns -1 if not found.
+     *
      * @param name
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     public int getUserId(String name) throws SQLException {
         return users.findIdByName(name);
