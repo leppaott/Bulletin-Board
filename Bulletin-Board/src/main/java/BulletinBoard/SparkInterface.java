@@ -56,7 +56,7 @@ public class SparkInterface {
     }
 
     public void start() throws Exception {
-        createDb();
+        //createDb();
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();
             map.put("subforums", board.getSubforums());
