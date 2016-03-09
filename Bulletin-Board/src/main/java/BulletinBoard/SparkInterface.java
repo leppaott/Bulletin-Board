@@ -147,11 +147,12 @@ public class SparkInterface {
                 String title = req.queryParams("title");
                 String username = req.queryParams("username");
                 String message = req.queryParams("message");
-                
+
                 if (title.isEmpty() || username.isEmpty() || message.isEmpty()) {
                     res.redirect("/subforum?id=" + forumId); //alert "Please fill username" etc
                     return null;
                 }
+                
                 int userId = board.getUserId(username);
                 if (userId == -1) {
                     userId = board.addUser(username);
@@ -166,7 +167,7 @@ public class SparkInterface {
             
             return null;
         });
-        
+
         get("/user", (req, res) -> {   // /user?id=1
             HashMap map = new HashMap<>();
 
