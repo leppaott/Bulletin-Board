@@ -40,7 +40,7 @@ public class SubforumDao {
     }
 
     public List<Subforum> findAll() throws SQLException {
-        return database.queryAndCollect("SELECT * FROM Subforum;", rs -> {
+        return database.queryAndCollect("SELECT * FROM Subforum ORDER BY name ASC;", rs -> {
             return new Subforum(
                     rs.getInt("forumId"),
                     rs.getString("name"),

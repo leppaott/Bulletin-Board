@@ -13,6 +13,7 @@ import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import Domain.Thread;
 import Domain.User;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SparkInterface {
 
@@ -60,24 +61,27 @@ public class SparkInterface {
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();
             map.put("subforums", board.getSubforums());
-
+            
             return new ModelAndView(map, "index");
         }, templateEngine);
 
         get("/subforum", (req, res) -> { // /subforum?id=1
             HashMap map = new HashMap<>();
-
+            
             try {
                 int forumId = Integer.parseInt(req.queryParams("id"));
                 map.put("subforum", board.getSubforum(forumId));
 
-                List<Thread> threads = board.getThreadsIn(forumId);
+                List<Thread> threads = board.getThreadsIn(forumId); //ordered by name
                 map.put("threads", threads);
 
-                List<Integer> lastMsgs = new ArrayList<>();
-                threads.forEach(t -> lastMsgs.add(((Thread) t).getLastMessage()));
-
-                map.put("lastMessages", board.getMessagesIn(lastMsgs)); //useful to have Message for future
+                List<Integer> lastMessageIds = new ArrayList<>();
+                threads.forEach(t -> lastMessageIds.add(((Thread) t).getLastMessage()));
+                
+                List<Message> lastMessages = board.getMessagesIn(lastMessageIds);
+                Collections.sort(lastMessages, (m1, m2) -> m1.getOrder() - m2.getOrder());
+                
+                map.put("lastMessages", lastMessages); //useful to have Message for future
             } catch (NumberFormatException | SQLException e) {
                 res.status(404);
             }
@@ -104,6 +108,11 @@ public class SparkInterface {
                 int threadId = Integer.parseInt(req.queryParams("id"));
                 String username = req.queryParams("name");
                 String comment = req.queryParams("comment");
+                
+                if (username.isEmpty() || comment.isEmpty()) {
+                    res.redirect("/thread?id=" + threadId); //alert "Please fill username" etc
+                    return null;
+                }
 
                 int userId = board.getUserId(username);
                 if (userId == -1) {
@@ -135,11 +144,14 @@ public class SparkInterface {
         post("/addthread", (req, res) -> {
             try {
                 int forumId = Integer.parseInt(req.queryParams("id"));
-
                 String title = req.queryParams("title");
                 String username = req.queryParams("username");
                 String message = req.queryParams("message");
                 
+                if (title.isEmpty() || username.isEmpty() || message.isEmpty()) {
+                    res.redirect("/subforum?id=" + forumId); //alert "Please fill username" etc
+                    return null;
+                }
                 int userId = board.getUserId(username);
                 if (userId == -1) {
                     userId = board.addUser(username);
@@ -151,8 +163,21 @@ public class SparkInterface {
             } catch (NumberFormatException | SQLException e) {
                 res.status(404);
             }
-
+            
             return null;
         });
+        
+        get("/user", (req, res) -> {   // /user?id=1
+            HashMap map = new HashMap<>();
+
+            try {
+                int userId = Integer.parseInt(req.queryParams("id"));
+                map.put("user", board.getUser(userId));
+            } catch (NumberFormatException | SQLException e) {
+                res.status(404);
+            }
+
+            return new ModelAndView(map, "user");
+        }, templateEngine);
     }
 }

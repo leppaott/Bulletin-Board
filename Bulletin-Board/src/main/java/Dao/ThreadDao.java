@@ -158,8 +158,10 @@ public class ThreadDao {
         Map<Integer, List<Thread>> senderRefs = new HashMap<>();
 
         Subforum forum = forumDao.findOne(forumId);
-
-        try (ResultSet rs = database.query("SELECT * FROM Thread WHERE forumId=?;", forumId)) {
+        
+        try (ResultSet rs = database.query("SELECT t.threadId, t.sender, t.lastMessage, "
+                + "t.dateTime, t.name, t.postcount FROM Thread t, Message m WHERE t.forumId=? "
+                + "AND t.lastMessage=m.messageId ORDER BY m.dateTime DESC;", forumId)) {
             while (rs.next()) {
                 int id = rs.getInt("threadId");
                 int sender = rs.getInt("sender");

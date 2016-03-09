@@ -31,4 +31,8 @@ public class User {
     public int getPostcount() {
         return postcount;
     }
+
+    public String toString() {
+        return joinDate.toString().substring(0, 16);
+    }
 }

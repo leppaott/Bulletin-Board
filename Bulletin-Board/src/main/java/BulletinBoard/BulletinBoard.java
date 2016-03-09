@@ -179,6 +179,12 @@ public class BulletinBoard {
         return threads.findAllIn(keys);
     }
 
+    /**
+     * Ordered by name.
+     * @param forumId
+     * @return
+     * @throws SQLException 
+     */
     public List<Thread> getThreadsIn(int forumId) throws SQLException {
         return threads.findAllIn(forumId);
     }
