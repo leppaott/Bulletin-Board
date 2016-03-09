@@ -139,7 +139,7 @@ public class SparkInterface {
                 String title = req.queryParams("title");
                 String username = req.queryParams("username");
                 String message = req.queryParams("message");
-                
+
                 int userId = board.getUserId(username);
                 if (userId == -1) {
                     userId = board.addUser(username);
@@ -154,5 +154,18 @@ public class SparkInterface {
 
             return null;
         });
+
+        get("/user", (req, res) -> {   // /user?id=1
+            HashMap map = new HashMap<>();
+
+            try {
+                int userId = Integer.parseInt(req.queryParams("id"));
+                map.put("user", board.getUser(userId));
+            } catch (NumberFormatException | SQLException e) {
+                res.status(404);
+            }
+
+            return new ModelAndView(map, "user");
+        }, templateEngine);
     }
 }
