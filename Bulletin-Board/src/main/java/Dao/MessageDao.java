@@ -208,6 +208,38 @@ public class MessageDao {
 
         return messages;
     }
+    
+    public List<Message> findAllIn(int threadId, int begin, int end) throws SQLException {
+        List<Message> messages = new ArrayList<>();
+        Map<Integer, List<Message>> senderRefs = new HashMap<>();
+
+        Thread thread = threadDao.findOne(threadId);
+
+        try (ResultSet rs = database.query("SELECT * FROM Message m WHERE threadId=? "
+                + "AND m.'order'>=? AND m.'order'<=? ORDER BY m.'order' ASC", threadId, begin, end)) {
+            while (rs.next()) {
+                int id = rs.getInt("messageId");
+                int sender = rs.getInt("sender");
+                int order = rs.getInt("order");
+                String content = rs.getString("content");
+                Timestamp date = new Timestamp(rs.getLong("dateTime"));
+
+                Message msg = new Message(id, thread, null, order, date, content);
+                messages.add(msg);
+
+                senderRefs.putIfAbsent(sender, new ArrayList<>());
+                senderRefs.get(sender).add(msg);
+            }
+        }
+        
+        for (User user : userDao.findAllIn(senderRefs.keySet())) {
+            for (Message message : senderRefs.get(user.getUserId())) {
+                message.setSender(user);
+            }
+        }
+
+        return messages;
+    }
 
     public Message findLastMessageForForum(int forumId) throws SQLException {
         List<Message> row = database.queryAndCollect(

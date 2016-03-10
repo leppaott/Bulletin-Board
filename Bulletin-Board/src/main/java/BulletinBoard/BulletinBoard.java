@@ -119,6 +119,19 @@ public class BulletinBoard {
     public List<Message> getMessagesIn(int threadId) throws SQLException {
         return messages.findAllIn(threadId);
     }
+    
+    /**
+     * [begin,end]
+     * @param threadId
+     * @param begin
+     * @param end
+     * @return
+     * @throws SQLException 
+     */
+    public List<Message> getMessagesIn(int threadId, int begin, int end) throws SQLException {
+        return messages.findAllIn(threadId, begin, end);
+    }
+
 
     public Message findLastMessageForForum(int forumId) throws SQLException {
         return messages.findLastMessageForForum(forumId);

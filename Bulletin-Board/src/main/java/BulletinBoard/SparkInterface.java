@@ -1,6 +1,7 @@
 package BulletinBoard;
 
 import Domain.Message;
+import Domain.Subforum;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +71,13 @@ public class SparkInterface {
             
             try {
                 int forumId = Integer.parseInt(req.queryParams("id"));
-                map.put("subforum", board.getSubforum(forumId));
+                Subforum forum = board.getSubforum(forumId);
+                
+                if (forum == null) {
+                    throw new SQLException();
+                }
+                
+                map.put("subforum", forum);
 
                 List<Thread> threads = board.getThreadsIn(forumId); //ordered by name
                 map.put("threads", threads);
@@ -78,12 +85,12 @@ public class SparkInterface {
                 List<Integer> lastMessageIds = new ArrayList<>();
                 threads.forEach(t -> lastMessageIds.add(((Thread) t).getLastMessage()));
                 
-                List<Message> lastMessages = board.getMessagesIn(lastMessageIds);
+                List<Message> lastMessages = board.getMessagesIn(lastMessageIds); //or order by?
                 Collections.sort(lastMessages, (m1, m2) -> m1.getOrder() - m2.getOrder());
                 
-                map.put("lastMessages", lastMessages); //useful to have Message for future
+                map.put("lastMessages", lastMessages);
             } catch (NumberFormatException | SQLException e) {
-                res.status(404);
+                res.redirect("/");
             }
 
             return new ModelAndView(map, "subforum");
@@ -94,10 +101,29 @@ public class SparkInterface {
 
             try {
                 int threadId = Integer.parseInt(req.queryParams("id"));
-                map.put("thread", board.getThread(threadId));
-                map.put("messages", board.getMessagesIn(threadId));
+                Thread thread = board.getThread(threadId);
+                
+                if (thread == null) {
+                    System.out.println("NOPE");
+                    throw new SQLException();
+                }
+                
+                int page;
+                int pages = (int)Math.ceil(thread.getPostcount() / 10.0);
+                try {
+                    page = Math.min(pages, Integer.parseInt(req.queryParams("page")));
+                } catch(NumberFormatException e) {
+                    page = 1;
+                }
+                
+                int begin = page * 10 - 9;
+                int end = begin + 9;
+                
+                map.put("pages", pages);
+                map.put("thread", thread);
+                map.put("messages", board.getMessagesIn(threadId, begin, end));
             } catch (NumberFormatException | SQLException e) {
-                res.status(404);
+                res.redirect("/");
             }
 
             return new ModelAndView(map, "thread");
@@ -122,7 +148,7 @@ public class SparkInterface {
                 board.addMessage(threadId, userId, comment);
                 res.redirect("/thread?id=" + threadId);
             } catch (NumberFormatException | SQLException e) {
-                res.status(404);
+                res.redirect("/");
             }
 
             return null;
@@ -133,9 +159,15 @@ public class SparkInterface {
 
             try {
                 int forumId = Integer.parseInt(req.queryParams("id"));
-                map.put("subforum", board.getSubforum(forumId));
+                Subforum forum = board.getSubforum(forumId);
+                
+                if (forum == null) {
+                    throw new SQLException();
+                }
+                
+                map.put("subforum", forum);
             } catch (NumberFormatException | SQLException e) {
-                res.status(404);
+                res.redirect("/");;
             }
 
             return new ModelAndView(map, "addthread");
@@ -162,7 +194,7 @@ public class SparkInterface {
                 board.addMessage(threadId, userId, message);
                 res.redirect("/thread?id=" + threadId);
             } catch (NumberFormatException | SQLException e) {
-                res.status(404);
+                res.redirect("/");
             }
             
             return null;
@@ -173,9 +205,15 @@ public class SparkInterface {
 
             try {
                 int userId = Integer.parseInt(req.queryParams("id"));
+                User user = board.getUser(userId);
+                
+                if (user == null) {
+                    throw new SQLException();
+                }
+                 
                 map.put("user", board.getUser(userId));
             } catch (NumberFormatException | SQLException e) {
-                res.status(404);
+                res.redirect("/");
             }
 
             return new ModelAndView(map, "user");
