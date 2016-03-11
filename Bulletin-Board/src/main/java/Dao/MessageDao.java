@@ -56,6 +56,7 @@ public class MessageDao {
         }
         
         subforumDao.increasePostcount(thread.getForum().getForumId());
+        userDao.increasePostcount(senderId);
 
         return messageId;
     }
@@ -144,7 +145,7 @@ public class MessageDao {
         Map<Integer, List<Message>> senderRefs = new HashMap<>();
 
         try (ResultSet rs = database.query("SELECT * FROM Message WHERE messageId IN ("
-                + database.getListPlaceholder(keys.size()) + ");", keys)) {
+                + database.getListPlaceholder(keys.size()) + ") ORDER BY dateTime DESC;", keys)) {
             while (rs.next()) {
                 int id = rs.getInt("messageId");
                 int sender = rs.getInt("sender");

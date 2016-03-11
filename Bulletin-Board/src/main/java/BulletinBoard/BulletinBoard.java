@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BulletinBoard {
 
-    private final Database database;
+    private Database database;
     private final SubforumDao subforums;
     private final ThreadDao threads;
     private final MessageDao messages;
@@ -35,6 +35,37 @@ public class BulletinBoard {
 
     public void createTable(String table, String statement) throws SQLException {
         database.update("CREATE TABLE " + table + "(" + statement + ");");
+    }
+
+    public void createDb() throws SQLException { 
+        createTable("Subforum", "forumId integer PRIMARY KEY, name text, postcount integer");
+        createTable("Thread", "threadId integer PRIMARY KEY, forumId integer, sender integer, "
+                + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
+                + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
+                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
+        createTable("Message", "messageId integer PRIMARY KEY, threadId integer, sender integer, "
+                + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
+                + "FOREIGN KEY(sender) REFERENCES User(userId)");
+        createTable("User", "userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer");
+
+        addUser("Arto");
+        addUser("Matti");
+        addUser("Ada");
+        addSubforum("Ohjelmointi");
+        addSubforum("Lemmikit");
+        addSubforum("Lentokoneet");
+        addThread(1, 1, "Java on jees");
+        addThread(1, 1, "Python on jeesimpi");
+        addThread(1, 2, "LISP on parempi kuin");
+        addThread(1, 3, "Ohjelmointikielet on turhia");
+        addMessage(1, 1, "Mun mielestä Java on just hyvä kieli.");
+        addMessage(1, 2, "No eipäs, Ruby on parempi.");
+        addMessage(1, 3, "Ada on selkeästi parempi kuin kumpikin noista.");
+        addMessage(1, 1, "Mun mielestä Java on just hyvä kieli.");
+        addMessage(2, 1, "Python rulaa :)");
+        addMessage(3, 3, "LISP<3");
+        addMessage(3, 3, "LISP<3");
+        addMessage(4, 3, "LISP<<<<<<");
     }
 
     //subforums
@@ -119,19 +150,19 @@ public class BulletinBoard {
     public List<Message> getMessagesIn(int threadId) throws SQLException {
         return messages.findAllIn(threadId);
     }
-    
+
     /**
      * [begin,end]
+     *
      * @param threadId
      * @param begin
      * @param end
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     public List<Message> getMessagesIn(int threadId, int begin, int end) throws SQLException {
         return messages.findAllIn(threadId, begin, end);
     }
-
 
     public Message findLastMessageForForum(int forumId) throws SQLException {
         return messages.findLastMessageForForum(forumId);
@@ -193,10 +224,11 @@ public class BulletinBoard {
     }
 
     /**
-     * Ordered by name.
+     * Ordered by date, only 10 latest.
+     *
      * @param forumId
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
     public List<Thread> getThreadsIn(int forumId) throws SQLException {
         return threads.findAllIn(forumId);
@@ -212,18 +244,6 @@ public class BulletinBoard {
      */
     public int addUser(String name) throws SQLException {
         return users.addUser(name);
-    }
-
-    /**
-     * Updates user's postcount.
-     *
-     * @param userId
-     * @param postcount
-     * @return
-     * @throws SQLException
-     */
-    public boolean editUser(int userId, int postcount) throws SQLException {
-        return users.editUser(userId, postcount);
     }
 
     /**

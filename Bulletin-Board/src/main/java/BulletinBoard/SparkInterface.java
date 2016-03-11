@@ -1,12 +1,10 @@
 package BulletinBoard;
 
-import Domain.Message;
 import Domain.Subforum;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import spark.ModelAndView;
-import spark.Spark;
 import static spark.Spark.get;
 import static spark.Spark.post;
 import spark.TemplateEngine;
@@ -14,7 +12,6 @@ import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import Domain.Thread;
 import Domain.User;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class SparkInterface {
 
@@ -26,39 +23,8 @@ public class SparkInterface {
         this.templateEngine = new ThymeleafTemplateEngine();
     }
 
-    public void createDb() throws Exception {
-        board.createTable("Subforum", "forumId integer PRIMARY KEY, name text, postcount integer");
-        board.createTable("Thread", "threadId integer PRIMARY KEY, forumId integer, sender integer, "
-                + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
-                + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
-                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
-        board.createTable("Message", "messageId integer PRIMARY KEY, threadId integer, sender integer, "
-                + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
-                + "FOREIGN KEY(sender) REFERENCES User(userId)");
-        board.createTable("User", "userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer");
-
-        board.addUser("Arto");
-        board.addUser("Matti");
-        board.addUser("Ada");
-        board.addSubforum("Ohjelmointi");
-        board.addSubforum("Lemmikit");
-        board.addSubforum("Lentokoneet");
-        board.addThread(1, 1, "Java on jees");
-        board.addThread(1, 1, "Python on jeesimpi");
-        board.addThread(1, 2, "LISP on parempi kuin");
-        board.addThread(1, 3, "Ohjelmointikielet on turhia");
-        board.addMessage(1, 1, "Mun mielestä Java on just hyvä kieli.");
-        board.addMessage(1, 2, "No eipäs, Ruby on parempi.");
-        board.addMessage(1, 3, "Ada on selkeästi parempi kuin kumpikin noista.");
-        board.addMessage(1, 1, "Mun mielestä Java on just hyvä kieli.");
-        board.addMessage(2, 1, "Python rulaa :)");
-        board.addMessage(3, 3, "LISP<3");
-        board.addMessage(3, 3, "LISP<3");
-        board.addMessage(4, 3, "LISP<<<<<<");
-    }
-
     public void start() throws Exception {
-        //createDb();
+        //board.createDb();
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();
             map.put("subforums", board.getSubforums());
@@ -75,20 +41,15 @@ public class SparkInterface {
                 
                 if (forum == null) {
                     throw new SQLException();
-                }
-                
-                map.put("subforum", forum);
-
-                List<Thread> threads = board.getThreadsIn(forumId); //ordered by name
-                map.put("threads", threads);
+                } 
 
                 List<Integer> lastMessageIds = new ArrayList<>();
+                List<Thread> threads = board.getThreadsIn(forumId); 
                 threads.forEach(t -> lastMessageIds.add(((Thread) t).getLastMessage()));
                 
-                List<Message> lastMessages = board.getMessagesIn(lastMessageIds); //or order by?
-                Collections.sort(lastMessages, (m1, m2) -> m1.getOrder() - m2.getOrder());
-                
-                map.put("lastMessages", lastMessages);
+                map.put("subforum", forum);
+                map.put("threads", threads);
+                map.put("lastMessages", board.getMessagesIn(lastMessageIds));
             } catch (NumberFormatException | SQLException e) {
                 res.redirect("/");
             }
@@ -104,14 +65,14 @@ public class SparkInterface {
                 Thread thread = board.getThread(threadId);
                 
                 if (thread == null) {
-                    System.out.println("NOPE");
                     throw new SQLException();
                 }
                 
                 int page;
-                int pages = (int)Math.ceil(thread.getPostcount() / 10.0);
+                int pageCount = thread.getPageCount();
                 try {
-                    page = Math.min(pages, Integer.parseInt(req.queryParams("page")));
+                    page = Math.min(pageCount, Integer.parseInt(req.queryParams("page")));
+                    page = Math.max(page, 1);
                 } catch(NumberFormatException e) {
                     page = 1;
                 }
@@ -119,7 +80,8 @@ public class SparkInterface {
                 int begin = page * 10 - 9;
                 int end = begin + 9;
                 
-                map.put("pages", pages);
+                map.put("page", page);
+                map.put("pageCount", pageCount);
                 map.put("thread", thread);
                 map.put("messages", board.getMessagesIn(threadId, begin, end));
             } catch (NumberFormatException | SQLException e) {
@@ -217,6 +179,16 @@ public class SparkInterface {
             }
 
             return new ModelAndView(map, "user");
+        }, templateEngine);
+        
+        
+        get("/reset", (req, res) -> {   //resets db
+            HashMap map = new HashMap<>();
+            
+            //if wanna reset db here...
+
+            res.redirect("/");
+            return new ModelAndView(map, "index");
         }, templateEngine);
     }
 }

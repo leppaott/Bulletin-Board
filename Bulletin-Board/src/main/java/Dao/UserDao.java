@@ -24,9 +24,8 @@ public class UserDao {
         return userId;
     }
 
-    public boolean editUser(int userId, int postcount) throws SQLException {
-        int changes = database.update("UPDATE User SET postcount=? WHERE userId=?;",
-                userId, postcount);
+    public boolean increasePostcount(int userId) throws SQLException {
+        int changes = database.update("UPDATE User SET postcount=postcount+1 WHERE userId=?;", userId);
 
         return changes != 0;
     }

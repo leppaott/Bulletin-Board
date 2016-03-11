@@ -59,4 +59,7 @@ public class Thread {
         this.forum = forum;
     }
     
+    public int getPageCount() {
+        return (int)Math.ceil(postcount / 10.0);
+    }
  }

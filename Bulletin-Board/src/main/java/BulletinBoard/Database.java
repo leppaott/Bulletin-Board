@@ -44,7 +44,7 @@ public class Database {
 
         return DriverManager.getConnection(address);
     }
-
+   
     public void setDebugMode(boolean d) {
         debug = d;
     }

@@ -24,19 +24,19 @@
                     <tr>
                         <th class="cell-stat"></th>
                         <th><h3>Subforum</h3></th>
-                        <th class="cell-stat text-center hidden-xs hidden-sm">Posts</th>
-                        <th class="cell-stat-2x hidden-xs hidden-sm">Last Post</th>
+                        <th class="cell-stat text-center">Posts</th>
+                        <th class="cell-stat-2x">Last Post</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="subforum : ${subforums}">
-                        <td class="text-center"><i class="fa fa-question fa-2x text-primary"></i></td>
+                        <td class="text-center"></td>
                         <td>
                             <h4><a th:href="@{~/subforum(id=${subforum.forumId})}">
                                     <span th:text="${subforum.name}"></span></a></h4>
                         </td>
-                        <td class="text-center hidden-xs hidden-sm"><span th:text="${subforum.postcount}"></span></td>
-                        <td class="hidden-xs hidden-sm"><span th:text="${subforum.lastMessage}"></span></td>
+                        <td class="text-center"><span th:text="${subforum.postcount}"></span></td>
+                        <td><span th:text="${subforum.lastMessage}"></span></td>
                     </tr>
                 </tbody>
             </table>

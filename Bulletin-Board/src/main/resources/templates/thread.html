@@ -15,21 +15,15 @@
                 <h1 class="pull-left"><span th:text="${thread.name}"></span></h1>
             </div>
             <div class="breadcrumb pull-right">
-                <ol class="breadcrumb pull-right where-am-i">
+                <ol class="breadcrumb">
                     <li><a th:href="@{~/subforum(id=${thread.forum.forumId})}">Threads</a></li>
                     <li class="active"><span th:text="${thread.name}"></span></li>
                 </ol>
             </div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th class="cell-stat"></th>
-                        <th></th>
-                    </tr>
-                </thead>
+            <table class="table table-striped">>
                 <tbody>
                     <tr th:each="message : ${messages}">
-                        <td class="text-center"><i class="fa fa-question fa-2x text-primary"></i></td>
+                        <td class="text-center"></td>
                         <td class="hidden-xs hidden-sm">
                             <span th:text="${'by ' + message.sender.username}"></span><br/>
                             <span th:text="${'Time sent: ' + message}"></span><br/>
@@ -50,17 +44,16 @@
         </div>
         <nav>
             <ul class="pagination">
-                <li class="disabled">
-                    <a href="#" aria-label="Previous">
+                <li>
+                    <a th:href="@{~/thread(id=${thread.threadId}, page=${page-1})}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <!--<li class="active"><a href="#">1</a></li>-->
-                <li th:each="i : ${#numbers.sequence(1, pages)}">
-                    <a th:ref="@{~/thread(id=${thread.threadId},page=${i})"><span th:text="${i}"></span></a>
+                <li th:each="i : ${#numbers.sequence(1, pageCount)}">
+                    <a th:href="@{~/thread(id=${thread.threadId}, page=${i})}"><span th:text="${i}"></span></a>
                 </li>
                 <li>
-                    <a href="#" aria-label="Next">
+                    <a th:href="@{~/thread(id=${thread.threadId}, page=${page+1})}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
