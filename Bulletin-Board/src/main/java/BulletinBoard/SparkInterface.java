@@ -55,7 +55,7 @@ public class SparkInterface {
 
                 map.put("subforum", subforum);
                 map.put("threads", threads);
-                map.put("lastMessages",  board.getMessagesIn(lastMessageIds));
+                map.put("lastMessages", board.getMessagesIn(lastMessageIds));
             } catch (NumberFormatException | SQLException e) {
                 res.redirect("/");
             }
