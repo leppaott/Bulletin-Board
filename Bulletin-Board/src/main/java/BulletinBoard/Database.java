@@ -13,6 +13,7 @@ public class Database {
 
     private final Connection connection;
     private final RowSetFactory factory;
+    private boolean postgres;
     private boolean debug;
 
     public Database(String address) throws SQLException {
@@ -22,6 +23,7 @@ public class Database {
             address = envAddress;
         }
 
+        this.postgres = false;
         this.connection = getConnection(address);
         this.factory = RowSetProvider.newFactory();
     }
@@ -35,16 +37,20 @@ public class Database {
                 String password = dbUri.getUserInfo().split(":")[1];
                 String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':'
                         + dbUri.getPort() + dbUri.getPath();
-
+                postgres = true;
+                
                 return DriverManager.getConnection(dbUrl, username, password);
-            } catch (URISyntaxException | SQLException t) {
-                System.out.println("Error: " + t.getMessage());
+            } catch (URISyntaxException | SQLException e) {
             }
         }
-
+        
         return DriverManager.getConnection(address);
     }
    
+    public boolean getPostgres() {
+        return postgres;
+    }
+    
     public void setDebugMode(boolean d) {
         debug = d;
     }

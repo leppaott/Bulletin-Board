@@ -25,10 +25,11 @@ public class SparkInterface {
     }
 
     public void start() throws Exception {
-        //board.createDb();
         if (System.getenv("PORT") != null) {
             port(Integer.valueOf(System.getenv("PORT")));
         }
+        
+        board.createDb();
         
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();

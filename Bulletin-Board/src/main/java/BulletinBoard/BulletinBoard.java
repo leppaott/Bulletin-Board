@@ -10,8 +10,10 @@ import Domain.Subforum;
 import Domain.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BulletinBoard {
 
@@ -23,7 +25,7 @@ public class BulletinBoard {
 
     public BulletinBoard(Database database) throws SQLException {
         this.database = database;
-        //this.database.setDebugMode(true);   
+        //this.database.setDebugMode(true);  
 
         subforums = new SubforumDao(database);
         threads = new ThreadDao(database);
@@ -34,23 +36,36 @@ public class BulletinBoard {
         messages.initDaos(threads, users, subforums);
     }
 
-    public void createTable(String statement) throws SQLException {
-        database.update("CREATE TABLE" + statement + ");");
+    public void createTable(String table) throws SQLException {
+        database.update("CREATE TABLE " + table + ";"); //not sure why ?;" didn't work
     }
 
-    public void createDb(boolean postgre) throws SQLException { 
-        ArrayList<String> list = new ArrayList<>();
-        
-        if(postgre) {
-            list = postgreLauseet();
-        } else {
-            list = sqliteLauseet();
+    public void dropTable(String table) throws SQLException {
+        database.update("DROP TABLE " + table + ";");
+    }
+
+    public void createDb() throws SQLException {
+        List<String> statements = this.getStatements();
+
+        for (String table : Arrays.asList("Subforum", "Thread", "Message", "User")) {
+            try {
+                dropTable(table); //required for postgres
+            } catch (SQLException e) {
+                //nothing to drop
+            }
         }
-        
-        for(String lause : list) {
-            createTable(lause);
+
+        if (database.getPostgres()) {
+            statements = statements.stream()
+                    .map(s -> ((String) s)
+                            .replace("integer PRIMARY", "SERIAL PRIMARY"))
+                    .collect(Collectors.toList());
         }
-        
+
+        for (String statement : statements) {
+            createTable(statement);
+        }
+
         addUser("Arto");
         addUser("Matti");
         addUser("Ada");
@@ -70,30 +85,21 @@ public class BulletinBoard {
         addMessage(3, 3, "LISP<3");
         addMessage(4, 3, "LISP<<<<<<");
     }
-    
-    private ArrayList<String> postgreLauseet() throws SQLException {
-        ArrayList<String> postgre = sqliteLauseet();
-        for(String lause : postgre) {
-            lause.replaceAll("integer PRIMARY", "SERIAL PRIMARY");
-        }
-        
-        return postgre;       
-    }
-    
-    private ArrayList<String> sqliteLauseet() throws SQLException {
-        ArrayList<String> sqlite = new ArrayList<>();
-        
-                
-        sqlite.add("Subforum(forumId integer PRIMARY KEY, name text, postcount integer)");
-        sqlite.add("Thread(threadId integer PRIMARY KEY, forumId integer, sender integer, "
+
+    private List<String> getStatements() throws SQLException {
+        List<String> statements = new ArrayList<>();
+
+        statements.add("Subforum (forumId integer PRIMARY KEY, name text, postcount integer)");
+        statements.add("Thread (threadId integer PRIMARY KEY, forumId integer, sender integer, "
                 + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
                 + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
                 + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId))");
-        sqlite.add("Message(messageId integer PRIMARY KEY, threadId integer, sender integer, "
+        statements.add("Message (messageId integer PRIMARY KEY, threadId integer, sender integer, "
                 + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
                 + "FOREIGN KEY(sender) REFERENCES User(userId))");
-        sqlite.add("User(userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer)");
-        return sqlite;
+        statements.add("User (userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer)");
+
+        return statements;
     }
 
     //subforums
