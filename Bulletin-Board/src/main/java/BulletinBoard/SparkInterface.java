@@ -12,6 +12,7 @@ import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import Domain.Thread;
 import Domain.User;
 import java.util.ArrayList;
+import static spark.Spark.port;
 
 public class SparkInterface {
 
@@ -25,6 +26,10 @@ public class SparkInterface {
 
     public void start() throws Exception {
         //board.createDb();
+        if (System.getenv("PORT") != null) {
+            port(Integer.valueOf(System.getenv("PORT")));
+        }
+        
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();
             map.put("subforums", board.getSubforums());

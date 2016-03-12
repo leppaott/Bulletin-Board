@@ -9,6 +9,7 @@ import Domain.Message;
 import Domain.Subforum;
 import Domain.User;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,21 +34,23 @@ public class BulletinBoard {
         messages.initDaos(threads, users, subforums);
     }
 
-    public void createTable(String table, String statement) throws SQLException {
-        database.update("CREATE TABLE " + table + "(" + statement + ");");
+    public void createTable(String statement) throws SQLException {
+        database.update("CREATE TABLE" + statement + ");");
     }
 
-    public void createDb() throws SQLException { 
-        createTable("Subforum", "forumId integer PRIMARY KEY, name text, postcount integer");
-        createTable("Thread", "threadId integer PRIMARY KEY, forumId integer, sender integer, "
-                + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
-                + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
-                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
-        createTable("Message", "messageId integer PRIMARY KEY, threadId integer, sender integer, "
-                + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
-                + "FOREIGN KEY(sender) REFERENCES User(userId)");
-        createTable("User", "userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer");
-
+    public void createDb(boolean postgre) throws SQLException { 
+        ArrayList<String> list = new ArrayList<>();
+        
+        if(postgre) {
+            list = postgreLauseet();
+        } else {
+            list = sqliteLauseet();
+        }
+        
+        for(String lause : list) {
+            createTable(lause);
+        }
+        
         addUser("Arto");
         addUser("Matti");
         addUser("Ada");
@@ -66,6 +69,31 @@ public class BulletinBoard {
         addMessage(3, 3, "LISP<3");
         addMessage(3, 3, "LISP<3");
         addMessage(4, 3, "LISP<<<<<<");
+    }
+    
+    private ArrayList<String> postgreLauseet() throws SQLException {
+        ArrayList<String> postgre = sqliteLauseet();
+        for(String lause : postgre) {
+            lause.replaceAll("integer PRIMARY", "SERIAL PRIMARY");
+        }
+        
+        return postgre;       
+    }
+    
+    private ArrayList<String> sqliteLauseet() throws SQLException {
+        ArrayList<String> sqlite = new ArrayList<>();
+        
+                
+        sqlite.add("Subforum(forumId integer PRIMARY KEY, name text, postcount integer)");
+        sqlite.add("Thread(threadId integer PRIMARY KEY, forumId integer, sender integer, "
+                + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
+                + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
+                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId))");
+        sqlite.add("Message(messageId integer PRIMARY KEY, threadId integer, sender integer, "
+                + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
+                + "FOREIGN KEY(sender) REFERENCES User(userId))");
+        sqlite.add("User(userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer)");
+        return sqlite;
     }
 
     //subforums
