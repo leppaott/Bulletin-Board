@@ -11,7 +11,7 @@
     <body>
         <div class="container">
             <div class="page-header page-heading">
-                <h1 class="pull-left"><span th:text="${subforum.name}"></span></h1>
+                <h1 class="pull-left"><span th:text="${subforum.name}"></span> <a class="btn btn-default" th:href="@{~/addthread(id=${subforum.forumId})}" role="button">Add thread</a></h1>
             </div>
             <div class="breadcrumb pull-right">
                 <ol class="breadcrumb">
@@ -19,10 +19,6 @@
                     <li class="active">Threads</li>
                 </ol>
             </div>
-
-            <a class="btn btn-default" th:href="@{~/addthread(id=${subforum.forumId})}" role="button">
-                <span>Add thread</span>
-            </a>
 
             <table class="table table-striped">
                 <thead>

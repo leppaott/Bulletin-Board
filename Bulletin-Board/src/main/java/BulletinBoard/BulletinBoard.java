@@ -9,6 +9,7 @@ import Domain.Message;
 import Domain.Subforum;
 import Domain.User;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,17 +38,14 @@ public class BulletinBoard {
         database.update("CREATE TABLE " + table + "(" + statement + ");");
     }
 
-    public void createDb() throws SQLException { 
-        createTable("Subforum", "forumId integer PRIMARY KEY, name text, postcount integer");
-        createTable("Thread", "threadId integer PRIMARY KEY, forumId integer, sender integer, "
-                + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
-                + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
-                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
-        createTable("Message", "messageId integer PRIMARY KEY, threadId integer, sender integer, "
-                + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
-                + "FOREIGN KEY(sender) REFERENCES User(userId)");
-        createTable("User", "userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer");
-
+    public void createDb(boolean postgre) throws SQLException { 
+        
+        if(postgre) {
+            postgreLauseet();
+        } else {
+            sqliteLauseet();
+        }
+        
         addUser("Arto");
         addUser("Matti");
         addUser("Ada");
@@ -66,6 +64,32 @@ public class BulletinBoard {
         addMessage(3, 3, "LISP<3");
         addMessage(3, 3, "LISP<3");
         addMessage(4, 3, "LISP<<<<<<");
+    }
+    
+    private void postgreLauseet() throws SQLException {
+        createTable("Subforum", "forumId SERIAL PRIMARY KEY, name text, postcount integer");
+        createTable("Thread", "threadId SERIAL PRIMARY KEY, forumId SERIAL, sender SERIAL, "
+                    + "lastMessage SERIAL, name text, dateTime Timestamp, postcount integer, "
+                    + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
+                    + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
+        createTable("Message", "messageId SERIAL PRIMARY KEY, threadId SERIAL, sender SERIAL, "
+                    + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
+                    + "FOREIGN KEY(sender) REFERENCES User(userId)");
+        createTable("User", "userId SERIAL PRIMARY KEY, username text, joinDate Timestamp, postcount integer");
+        
+    }
+    
+    private void sqliteLauseet() throws SQLException {
+        createTable("Subforum", "forumId integer PRIMARY KEY, name text, postcount integer");
+        createTable("Thread", "threadId integer PRIMARY KEY, forumId integer, sender integer, "
+                + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
+                + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
+                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
+        createTable("Message", "messageId integer PRIMARY KEY, threadId integer, sender integer, "
+                + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
+                + "FOREIGN KEY(sender) REFERENCES User(userId)");
+        createTable("User", "userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer");
+
     }
 
     //subforums
