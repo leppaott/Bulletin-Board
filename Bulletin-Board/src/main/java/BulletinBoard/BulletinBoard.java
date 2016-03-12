@@ -34,16 +34,21 @@ public class BulletinBoard {
         messages.initDaos(threads, users, subforums);
     }
 
-    public void createTable(String table, String statement) throws SQLException {
-        database.update("CREATE TABLE " + table + "(" + statement + ");");
+    public void createTable(String statement) throws SQLException {
+        database.update("CREATE TABLE" + statement + ");");
     }
 
     public void createDb(boolean postgre) throws SQLException { 
+        ArrayList<String> list = new ArrayList<>();
         
         if(postgre) {
-            postgreLauseet();
+            list = postgreLauseet();
         } else {
-            sqliteLauseet();
+            list = sqliteLauseet();
+        }
+        
+        for(String lause : list) {
+            createTable(lause);
         }
         
         addUser("Arto");
@@ -66,30 +71,29 @@ public class BulletinBoard {
         addMessage(4, 3, "LISP<<<<<<");
     }
     
-    private void postgreLauseet() throws SQLException {
-        createTable("Subforum", "forumId SERIAL PRIMARY KEY, name text, postcount integer");
-        createTable("Thread", "threadId SERIAL PRIMARY KEY, forumId SERIAL, sender SERIAL, "
-                    + "lastMessage SERIAL, name text, dateTime Timestamp, postcount integer, "
-                    + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
-                    + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
-        createTable("Message", "messageId SERIAL PRIMARY KEY, threadId SERIAL, sender SERIAL, "
-                    + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
-                    + "FOREIGN KEY(sender) REFERENCES User(userId)");
-        createTable("User", "userId SERIAL PRIMARY KEY, username text, joinDate Timestamp, postcount integer");
+    private ArrayList<String> postgreLauseet() throws SQLException {
+        ArrayList<String> postgre = sqliteLauseet();
+        for(String lause : postgre) {
+            lause.replaceAll("integer PRIMARY", "SERIAL PRIMARY");
+        }
         
+        return postgre;       
     }
     
-    private void sqliteLauseet() throws SQLException {
-        createTable("Subforum", "forumId integer PRIMARY KEY, name text, postcount integer");
-        createTable("Thread", "threadId integer PRIMARY KEY, forumId integer, sender integer, "
+    private ArrayList<String> sqliteLauseet() throws SQLException {
+        ArrayList<String> sqlite = new ArrayList<>();
+        
+                
+        sqlite.add("Subforum(forumId integer PRIMARY KEY, name text, postcount integer)");
+        sqlite.add("Thread(threadId integer PRIMARY KEY, forumId integer, sender integer, "
                 + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
                 + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
-                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId)");
-        createTable("Message", "messageId integer PRIMARY KEY, threadId integer, sender integer, "
+                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId))");
+        sqlite.add("Message(messageId integer PRIMARY KEY, threadId integer, sender integer, "
                 + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
-                + "FOREIGN KEY(sender) REFERENCES User(userId)");
-        createTable("User", "userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer");
-
+                + "FOREIGN KEY(sender) REFERENCES User(userId))");
+        sqlite.add("User(userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer)");
+        return sqlite;
     }
 
     //subforums
