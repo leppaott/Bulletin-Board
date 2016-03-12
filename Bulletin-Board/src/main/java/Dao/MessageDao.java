@@ -54,7 +54,7 @@ public class MessageDao {
         if (!edited) {
             return -1;
         }
-        
+
         subforumDao.increasePostcount(thread.getForum().getForumId());
         userDao.increasePostcount(senderId);
 
@@ -124,15 +124,19 @@ public class MessageDao {
             }
         }
 
-        for (User user : userDao.findAllIn(senderRefs.keySet())) {
-            for (Message message : senderRefs.get(user.getUserId())) {
-                message.setSender(user);
+        if (!senderRefs.isEmpty()) {
+            for (User user : userDao.findAllIn(senderRefs.keySet())) {
+                for (Message message : senderRefs.get(user.getUserId())) {
+                    message.setSender(user);
+                }
             }
         }
 
-        for (Thread thread : threadDao.findAllIn(threadRefs.keySet())) {
-            for (Message message : threadRefs.get(thread.getThreadId())) {
-                message.setThread(thread);
+        if (!threadRefs.isEmpty()) {
+            for (Thread thread : threadDao.findAllIn(threadRefs.keySet())) {
+                for (Message message : threadRefs.get(thread.getThreadId())) {
+                    message.setThread(thread);
+                }
             }
         }
 
@@ -140,7 +144,7 @@ public class MessageDao {
     }
 
     public List<Message> findAllIn(Collection<Integer> keys) throws SQLException {
-        List<Message> messages = new ArrayList<>();
+        List<Message> messages = new ArrayList<>();     
         Map<Integer, List<Message>> threadRefs = new HashMap<>();
         Map<Integer, List<Message>> senderRefs = new HashMap<>();
 
@@ -164,15 +168,19 @@ public class MessageDao {
             }
         }
 
-        for (User user : userDao.findAllIn(senderRefs.keySet())) {
-            for (Message message : senderRefs.get(user.getUserId())) {
-                message.setSender(user);
+        if (!senderRefs.isEmpty()) {
+            for (User user : userDao.findAllIn(senderRefs.keySet())) {
+                for (Message message : senderRefs.get(user.getUserId())) {
+                    message.setSender(user);
+                }
             }
         }
 
-        for (Thread thread : threadDao.findAllIn(threadRefs.keySet())) {
-            for (Message message : threadRefs.get(thread.getThreadId())) {
-                message.setThread(thread);
+        if (!threadRefs.isEmpty()) {
+            for (Thread thread : threadDao.findAllIn(threadRefs.keySet())) {
+                for (Message message : threadRefs.get(thread.getThreadId())) {
+                    message.setThread(thread);
+                }
             }
         }
 
@@ -201,15 +209,18 @@ public class MessageDao {
             }
         }
 
-        for (User user : userDao.findAllIn(senderRefs.keySet())) {
-            for (Message message : senderRefs.get(user.getUserId())) {
-                message.setSender(user);
+        if (!senderRefs.isEmpty()) {
+            for (User user : userDao.findAllIn(senderRefs.keySet())) {
+                for (Message message : senderRefs.get(user.getUserId())) {
+                    message.setSender(user);
+
+                }
             }
         }
 
         return messages;
     }
-    
+
     public List<Message> findAllIn(int threadId, int begin, int end) throws SQLException {
         List<Message> messages = new ArrayList<>();
         Map<Integer, List<Message>> senderRefs = new HashMap<>();
@@ -232,10 +243,12 @@ public class MessageDao {
                 senderRefs.get(sender).add(msg);
             }
         }
-        
-        for (User user : userDao.findAllIn(senderRefs.keySet())) {
-            for (Message message : senderRefs.get(user.getUserId())) {
-                message.setSender(user);
+
+        if (!senderRefs.isEmpty()) {
+            for (User user : userDao.findAllIn(senderRefs.keySet())) {
+                for (Message message : senderRefs.get(user.getUserId())) {
+                    message.setSender(user);
+                }
             }
         }
 

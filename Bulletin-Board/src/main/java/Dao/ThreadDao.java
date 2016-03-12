@@ -29,28 +29,28 @@ public class ThreadDao {
         this.messageDao = messageDao;
         this.forumDao = forumDao;
     }
-    
+
     public int addThread(int forumId, int senderId, String name) throws SQLException {
         long dateTime = System.currentTimeMillis();
-        
+
         int threadId = database.insert("INSERT INTO Thread (forumId, sender,"
-                + " dateTime, name, postcount) VALUES(?, ?, ?, ?, ?);", 
-                forumId, senderId, dateTime, name, 0); 
-     
+                + " dateTime, name, postcount) VALUES(?, ?, ?, ?, ?);",
+                forumId, senderId, dateTime, name, 0);
+
         return threadId;
     }
-    
+
     public boolean editThread(int threadId, int lastMessageId, int postcount) throws SQLException {
         int changes = database.update("UPDATE Thread SET lastMessage=?, postcount=? WHERE threadId=?;",
                 lastMessageId, postcount, threadId);
-        
+
         return changes != 0;
     }
-    
+
     public boolean editThread(int threadId, String name) throws SQLException {
         int changes = database.update("UPDATE Thread SET name=? WHERE threadId=?;",
                 name, threadId);
-        
+
         return changes != 0;
     }
 
@@ -97,15 +97,19 @@ public class ThreadDao {
             }
         }
 
-        for (Subforum forum : forumDao.findAllIn(subforumRefs.keySet())) {
-            for (Thread thread : subforumRefs.get(forum.getForumId())) {
-                thread.setForum(forum);
+        if (!subforumRefs.isEmpty()) {
+            for (Subforum forum : forumDao.findAllIn(subforumRefs.keySet())) {
+                for (Thread thread : subforumRefs.get(forum.getForumId())) {
+                    thread.setForum(forum);
+                }
             }
         }
 
-        for (User user : userDao.findAllIn(senderRefs.keySet())) {
-            for (Thread thread : senderRefs.get(user.getUserId())) {
-                thread.setSender(user);
+        if (!senderRefs.isEmpty()) {
+            for (User user : userDao.findAllIn(senderRefs.keySet())) {
+                for (Thread thread : senderRefs.get(user.getUserId())) {
+                    thread.setSender(user);
+                }
             }
         }
 
@@ -138,27 +142,31 @@ public class ThreadDao {
             }
         }
 
-        for (Subforum forum : forumDao.findAllIn(subforumRefs.keySet())) {
-            for (Thread thread : subforumRefs.get(forum.getForumId())) {
-                thread.setForum(forum);
+        if (!subforumRefs.isEmpty()) {
+            for (Subforum forum : forumDao.findAllIn(subforumRefs.keySet())) {
+                for (Thread thread : subforumRefs.get(forum.getForumId())) {
+                    thread.setForum(forum);
+                }
             }
         }
 
-        for (User user : userDao.findAllIn(senderRefs.keySet())) {
-            for (Thread thread : senderRefs.get(user.getUserId())) {
-                thread.setSender(user);
+        if (!senderRefs.isEmpty()) {
+            for (User user : userDao.findAllIn(senderRefs.keySet())) {
+                for (Thread thread : senderRefs.get(user.getUserId())) {
+                    thread.setSender(user);
+                }
             }
         }
 
         return threads;
     }
-    
+
     public List<Thread> findAllIn(int forumId) throws SQLException {
         List<Thread> threads = new ArrayList<>();
         Map<Integer, List<Thread>> senderRefs = new HashMap<>();
 
         Subforum forum = forumDao.findOne(forumId);
-        
+
         try (ResultSet rs = database.query("SELECT t.threadId, t.sender, t.lastMessage, "
                 + "t.dateTime, t.name, t.postcount FROM Thread t, Message m WHERE t.forumId=? "
                 + "AND t.lastMessage=m.messageId ORDER BY m.dateTime DESC LIMIT 10;", forumId)) {
@@ -178,9 +186,11 @@ public class ThreadDao {
             }
         }
 
-        for (User user : userDao.findAllIn(senderRefs.keySet())) {
-            for (Thread thread : senderRefs.get(user.getUserId())) {
-                thread.setSender(user);
+        if (!senderRefs.isEmpty()) {
+            for (User user : userDao.findAllIn(senderRefs.keySet())) {
+                for (Thread thread : senderRefs.get(user.getUserId())) {
+                    thread.setSender(user);
+                }
             }
         }
 

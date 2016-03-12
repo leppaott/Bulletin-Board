@@ -50,6 +50,10 @@ public class Database {
     }
 
     public String getListPlaceholder(int size) {
+        if (size == 0) {
+            return "";
+        }
+        
         StringBuilder params = new StringBuilder("?");
 
         for (int i = 1; i < size; i++) {

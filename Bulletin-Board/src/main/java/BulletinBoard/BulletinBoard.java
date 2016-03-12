@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BulletinBoard {
 
-    private Database database;
+    private final Database database;
     private final SubforumDao subforums;
     private final ThreadDao threads;
     private final MessageDao messages;
@@ -115,8 +115,7 @@ public class BulletinBoard {
      * @throws SQLException
      */
     public int addMessage(int threadId, int senderId, String content) throws SQLException {
-        int messageId = messages.addMessage(threadId, senderId, content);
-        return messageId;
+        return messages.addMessage(threadId, senderId, content);
     }
 
     /**
