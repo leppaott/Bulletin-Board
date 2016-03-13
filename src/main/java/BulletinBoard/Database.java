@@ -1,8 +1,6 @@
 package BulletinBoard;
 
 import Domain.Collector;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.*;
 import java.util.*;
 import javax.sql.rowset.CachedRowSet;
@@ -26,6 +24,9 @@ public class Database {
 
         this.connection = DriverManager.getConnection(address);
         this.factory = RowSetProvider.newFactory();
+        
+        Statement stmt = connection.createStatement();
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
     }
    
     public boolean getPostgres() {
@@ -154,6 +155,4 @@ public class Database {
 
         System.out.println();
     }
-    
-
 }
