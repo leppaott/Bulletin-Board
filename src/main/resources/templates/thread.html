@@ -1,0 +1,67 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="${thread.name}"></title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+        <style>nav {text-align: center}</style>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="page-header page-heading">
+                <h1 class="pull-left"><span th:text="${thread.name}"></span></h1>
+            </div>
+            <div class="breadcrumb pull-right">
+                <ol class="breadcrumb">
+                    <li><a th:href="@{~/subforum(id=${thread.forum.forumId})}">Threads</a></li>
+                    <li class="active"><span th:text="${thread.name}"></span></li>
+                </ol>
+            </div>
+            <table class="table table-striped">
+                <tbody>
+                    <tr th:each="message : ${messages}">
+                        <td class="text-center"></td>
+                        <td class="hidden-xs hidden-sm" width="20%">
+                            <a th:href="@{~/user(id=${message.sender.userId})}" th:text="${message.sender.username}"></a><br/>
+                            <span th:text="${'Posts: ' + message.sender.postcount}"></span><br/>
+                            <span th:text="${'Joined: ' + message.sender}"></span>
+                        </td>
+                        <td class="hidden-xs hidden-sm">
+                            <span th:text="${'Time sent: ' + message}"></span><br/>
+                            <span th:text="${message.content}"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <form role="form" method="POST" th:action="${'/thread?id=' + thread.threadId}">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <textarea class="form-control" rows="1" cols="20" id="name" name="name" style="resize:none;"></textarea>
+                    <label for="comment">Comment:</label>
+                    <textarea class="form-control" rows="5" id="comment" name="comment" style="resize:none;"></textarea>
+                    <input type="submit" value="Post Comment"/>
+                </div>
+            </form>
+        </div>
+        <nav>
+            <ul class="pagination">
+                <li>
+                    <a th:href="@{~/thread(id=${thread.threadId}, page=${page-1})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="i : ${#numbers.sequence(1, pageCount)}">
+                    <a th:href="@{~/thread(id=${thread.threadId}, page=${i})}"><span th:text="${i}"></span></a>
+                </li>
+                <li>
+                    <a th:href="@{~/thread(id=${thread.threadId}, page=${page+1})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </body>
+</html>

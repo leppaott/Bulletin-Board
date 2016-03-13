@@ -1,0 +1,45 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Bulletin-Board</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="page-header page-heading">
+                <h1 class="pull-left">Bulletin-Board</h1>
+            </div>
+            <div class="breadcrumb pull-right">                
+                <ol class="breadcrumb ">
+                    <li><a href="">Bulletin-Board</a></li>
+                    <li class="active">Subforums</li>
+                </ol>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="cell-stat"></th>
+                        <th><h3>Subforum</h3></th>
+                        <th class="cell-stat text-center">Posts</th>
+                        <th class="cell-stat-2x">Last Post</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="subforum : ${subforums}">
+                        <td class="text-center"></td>
+                        <td>
+                            <h4><a th:href="@{~/subforum(id=${subforum.forumId})}">
+                                    <span th:text="${subforum.name}"></span></a></h4>
+                        </td>
+                        <td class="text-center"><span th:text="${subforum.postcount}"></span></td>
+                        <td><span th:text="${subforum.lastMessage}"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
