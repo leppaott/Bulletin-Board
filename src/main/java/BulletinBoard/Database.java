@@ -17,14 +17,14 @@ public class Database {
     private boolean debug;
 
     public Database(String address) throws SQLException {
-        String envAddress = System.getenv("JDBC_DATABASE_URL");
+        String dbUrl  = System.getenv("JDBC_DATABASE_URL");
 
-        if (envAddress != null) {
-            address = envAddress;
+        if (dbUrl != null) {
+            address = dbUrl ;
+            postgres = true;
         }
 
-        this.postgres = false;
-        this.connection = getConnection(address);
+        this.connection = DriverManager.getConnection(address);
         this.factory = RowSetProvider.newFactory();
     }
 
