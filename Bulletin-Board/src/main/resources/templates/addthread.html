@@ -16,7 +16,7 @@
             </div>
 
             <div class="page-header page-heading">
-                <h1>Post New Thread To <span th:text="${subforum.name}"></span></h1>
+                <h1>Post new thread to <span th:text="${subforum.name}"></span></h1>
             </div>
 
             <form role="form" method="POST" th:action="${'/addthread?id=' + subforum.forumId}">
@@ -29,7 +29,7 @@
 
                     <label for="message">Message:</label>
                     <textarea class="form-control" rows="5" id="message" name="message" style="resize:none;"></textarea>
-                    <input type="submit" value="Submit New Thread"/>
+                    <input type="submit" value="Submit new thread"/>
                 </div>
             </form>
         </div>

@@ -69,6 +69,7 @@ public class BulletinBoard {
         addUser("Arto");
         addUser("Matti");
         addUser("Ada");
+        addUser("Juuso93");
         addSubforum("Ohjelmointi");
         addSubforum("Lemmikit");
         addSubforum("Lentokoneet");
@@ -76,14 +77,38 @@ public class BulletinBoard {
         addThread(1, 1, "Python on jeesimpi");
         addThread(1, 2, "LISP on parempi kuin");
         addThread(1, 3, "Ohjelmointikielet on turhia");
+        addThread(1, 3, "Netbeans lagaa");
+        addThread(1, 4, "Ohjelmointikeskustelu");
+        addThread(1, 1, "Ohjelmointimielipide");
+        addThread(1, 4, "Ohjelmointi on parasta");
+        addThread(1, 4, "Ohjelmoin joka päivä");
+        addThread(1, 3, "Kymmenes thread ohjemoinnista");
+        addThread(1, 2, "Yhdestoista thread ohjelmoinnista");
         addMessage(1, 1, "Mun mielestä Java on just hyvä kieli.");
         addMessage(1, 2, "No eipäs, Ruby on parempi.");
         addMessage(1, 3, "Ada on selkeästi parempi kuin kumpikin noista.");
         addMessage(1, 1, "Mun mielestä Java on just hyvä kieli.");
         addMessage(2, 1, "Python rulaa :)");
         addMessage(3, 3, "LISP<3");
-        addMessage(3, 3, "LISP<3");
-        addMessage(4, 3, "LISP<<<<<<");
+        addMessage(4, 3, "LISP<<<<<<3");
+        addMessage(5, 3, "Netbeans lagaa aina");
+        addMessage(6, 4, "Keskustelua ohjelmoinnista");
+        addMessage(7, 1, "Mielipiteitä ohjelmoinnista");
+        addMessage(8, 4, "Ohjelmointi on parasta mitä tiedän.");
+        addMessage(9, 4, "En tee muuta kuin ohjelmia.");
+        addMessage(10, 3, "Tämä on kymmenes thread Ohjelmointi-subforumissa.");
+        addMessage(11, 2, "Tämä on yhdestoista thread Ohjelmointi-subforumissa.");
+        addMessage(8, 1, "You know it Juuso ;)");      
+        addMessage(8, 2, "Ryhmässä kannattaa miettiä myös työhön liittyviä tehtäviä sekä niiden jakamista ryhmän kesken, sekä tietysti sitä, että miten ohjelmakoodi saadaan jaettua kaikkien ryhmäläisten kesken niin, että jokainen pääsee kontribuoimaan siihen. Muutamia hyviä työvälineitä ovat esimerkiksi trello ja github. Varsinkin githubin käytön opettelusta on paljon hyötyä myös tulevaisuudessa.");
+        addMessage(8, 4, "Juuso tässä, moi!");
+        addMessage(8, 1, "Keskusteluun sopiva viesti");
+        addMessage(8, 2, "Kuudes viesti keskusteluun Ohjelmointi on parasta");
+        addMessage(8, 3, "Ohjelmointi on ihan jees t. Ada");
+        addMessage(8, 3, "Ada on parasta");
+        addMessage(8, 1, "Kaikki ohjelmointi kielet on ihan jees");
+        addMessage(8, 4, "Kymmenes viesti keskustelussa");
+        addMessage(8, 2, "Yhdestoista viesti keskusteluun Ohjelmointi on parasta");
+        addMessage(8, 3, "Viiminen viesti");
     }
 
     private List<String> getStatements() throws SQLException {
