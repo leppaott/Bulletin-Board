@@ -17,7 +17,7 @@ public class Database {
     private boolean debug;
 
     public Database(String address) throws SQLException {
-        String envAddress = System.getenv("DATABASE_URL");
+        String envAddress = System.getenv("JDBC_DATABASE_URL");
 
         if (envAddress != null) {
             address = envAddress;
