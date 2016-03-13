@@ -28,9 +28,7 @@ public class SparkInterface {
         if (System.getenv("PORT") != null) {
             port(Integer.valueOf(System.getenv("PORT")));
         }
-        
-        board.createDb();
-        
+
         get("/", (req, res) -> {    //http://localhost:4567/
             HashMap map = new HashMap<>();
             map.put("subforums", board.getSubforums());
@@ -189,8 +187,7 @@ public class SparkInterface {
 
         get("/reset", (req, res) -> {   //resets db
             HashMap map = new HashMap<>();
-
-            //if wanna reset db here...
+            board.createDb();
             res.redirect("/");
             return new ModelAndView(map, "index");
         }, templateEngine);
