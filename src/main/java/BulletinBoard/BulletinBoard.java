@@ -41,7 +41,7 @@ public class BulletinBoard {
     }
 
     public void dropTable(String table) throws SQLException {
-        database.update("DROP TABLE " + table + ";");
+        database.update("DROP TABLE " + table);
     }
 
     public void createDb() throws SQLException {
