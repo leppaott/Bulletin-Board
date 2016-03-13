@@ -114,7 +114,9 @@ public class Database {
 
     public int update(String updateQuery, Object... params) throws SQLException {
         int changes;
-
+        Statement st = connection.createStatement();
+        st.executeUpdate(updateQuery);
+        
         try (PreparedStatement stmt = prepareStatement(updateQuery, params)) {
             changes = stmt.executeUpdate();
 

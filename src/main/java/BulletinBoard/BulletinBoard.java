@@ -62,17 +62,14 @@ public class BulletinBoard {
                     .collect(Collectors.toList());
         }
 
-//        for (String statement : statements) {
-//            try {
-//                createTable(statement);
-//            } catch (SQLException e) {
-//
-//            }
-//        }
-        database.update("CREATE TABLE Subforum (forumId SERIAL PRIMARY KEY, name text, postcount integer);");
-        database.update("CREATE TABLE Thread (threadId SERIAL PRIMARY KEY, forumId integer, sender integer, lastMessage integer, name text, dateTime Timestamp, postcount integer, FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), FOREIGN KEY(lastMessage) REFERENCES Message(messageId));");
-        database.update("CREATE TABLE Message (messageId SERIAL PRIMARY KEY, threadId integer, sender integer, 'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), FOREIGN KEY(sender) REFERENCES User(userId));");
-        database.update("CREATE TABLE User (userId SERIAL PRIMARY KEY, username text, joinDate Timestamp, postcount integer);");
+        for (String statement : statements) {
+            try {
+                createTable(statement);
+            } catch (SQLException e) {
+
+            }
+        }
+        
 
         addUser("Arto");
         addUser("Matti");
