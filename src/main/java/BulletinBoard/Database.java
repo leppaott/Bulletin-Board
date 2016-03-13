@@ -24,6 +24,15 @@ public class Database {
 
         this.connection = DriverManager.getConnection(address);
         this.factory = RowSetProvider.newFactory();
+        
+        Statement stmt = connection.createStatement();
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
+        stmt = connection.createStatement();
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks2 (tick timestamp)");
+        stmt = connection.createStatement();
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks3 (tick timestamp)");
+        stmt = connection.createStatement();
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks4 (tick timestamp)");
     }
    
     public boolean getPostgres() {
@@ -114,8 +123,6 @@ public class Database {
 
     public int update(String updateQuery, Object... params) throws SQLException {
         int changes;
-        Statement st = connection.createStatement();
-        st.executeUpdate(updateQuery);
         
         try (PreparedStatement stmt = prepareStatement(updateQuery, params)) {
             changes = stmt.executeUpdate();
