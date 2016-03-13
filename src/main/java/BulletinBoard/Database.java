@@ -24,9 +24,6 @@ public class Database {
 
         this.connection = DriverManager.getConnection(address);
         this.factory = RowSetProvider.newFactory();
-        
-        Statement stmt = connection.createStatement();
-        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
     }
    
     public boolean getPostgres() {
