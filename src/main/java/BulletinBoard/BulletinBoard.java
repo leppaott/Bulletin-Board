@@ -37,11 +37,11 @@ public class BulletinBoard {
     }
 
     public void createTable(String table) throws SQLException {
-        database.update("CREATE TABLE IF NOT EXISTS " + table); //not sure why ?;" didn't work
+        database.update("CREATE TABLE IF NOT EXISTS " + table + ";"); //not sure why ?;" didn't work
     }
 
     public void dropTable(String table) throws SQLException {
-        database.update("DROP TABLE " + table);
+        database.update("DROP TABLE " + table + ";");
     }
 
     public void createDb() throws SQLException {
