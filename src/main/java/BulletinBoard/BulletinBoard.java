@@ -37,7 +37,7 @@ public class BulletinBoard {
     }
 
     public void createTable(String table) throws SQLException {
-        database.update("CREATE TABLE IF NOT EXISTS " + table + ";"); //not sure why ?;" didn't work
+        database.update("CREATE TABLE " + table + ";"); //not sure why ?;" didn't work
     }
 
     public void dropTable(String table) throws SQLException {
@@ -69,7 +69,6 @@ public class BulletinBoard {
 
             }
         }
-        
 
         addUser("Arto");
         addUser("Matti");

@@ -8,7 +8,6 @@ import javax.sql.rowset.RowSetFactory;
 import javax.sql.rowset.RowSetProvider;
 
 public class Database {
-
     private final Connection connection;
     private final RowSetFactory factory;
     private boolean postgres;
@@ -21,7 +20,7 @@ public class Database {
             address = dbUrl;
             postgres = true;
         }
-
+        
         this.connection = DriverManager.getConnection(address);
         this.factory = RowSetProvider.newFactory();
     }
