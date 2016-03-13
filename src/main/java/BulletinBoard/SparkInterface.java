@@ -188,6 +188,7 @@ public class SparkInterface {
         get("/reset", (req, res) -> {   //resets db
             HashMap map = new HashMap<>();
             board.createDb();
+
             res.redirect("/");
             return new ModelAndView(map, "index");
         }, templateEngine);
