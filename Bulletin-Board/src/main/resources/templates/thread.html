@@ -20,12 +20,16 @@
                     <li class="active"><span th:text="${thread.name}"></span></li>
                 </ol>
             </div>
-            <table class="table table-striped">>
+            <table class="table table-striped">
                 <tbody>
                     <tr th:each="message : ${messages}">
                         <td class="text-center"></td>
+                        <td class="hidden-xs hidden-sm" width="20%">
+                            <a th:href="@{~/user(id=${message.sender.userId})}" th:text="${message.sender.username}"></a><br/>
+                            <span th:text="${'Posts: ' + message.sender.postcount}"></span><br/>
+                            <span th:text="${'Joined: ' + message.sender}"></span>
+                        </td>
                         <td class="hidden-xs hidden-sm">
-                            <span th:text="${'by ' + message.sender.username}"></span><br/>
                             <span th:text="${'Time sent: ' + message}"></span><br/>
                             <span th:text="${message.content}"></span>
                         </td>
