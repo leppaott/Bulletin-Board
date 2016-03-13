@@ -20,31 +20,12 @@ public class Database {
         String dbUrl  = System.getenv("JDBC_DATABASE_URL");
 
         if (dbUrl != null) {
-            address = dbUrl ;
+            address = dbUrl;
             postgres = true;
         }
 
         this.connection = DriverManager.getConnection(address);
         this.factory = RowSetProvider.newFactory();
-    }
-
-    private Connection getConnection(String address) throws SQLException {
-        if (address.contains("postgres")) {
-            try {
-                URI dbUri = new URI(address);
-
-                String username = dbUri.getUserInfo().split(":")[0];
-                String password = dbUri.getUserInfo().split(":")[1];
-                String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':'
-                        + dbUri.getPort() + dbUri.getPath();
-                postgres = true;
-                
-                return DriverManager.getConnection(dbUrl, username, password);
-            } catch (URISyntaxException | SQLException e) {
-            }
-        }
-        
-        return DriverManager.getConnection(address);
     }
    
     public boolean getPostgres() {

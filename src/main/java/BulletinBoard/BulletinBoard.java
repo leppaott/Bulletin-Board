@@ -63,7 +63,11 @@ public class BulletinBoard {
         }
 
         for (String statement : statements) {
-            createTable(statement);
+            try {
+                createTable(statement);
+            } catch (SQLException e) {
+
+            }
         }
 
         addUser("Arto");
@@ -98,7 +102,7 @@ public class BulletinBoard {
         addMessage(9, 4, "En tee muuta kuin ohjelmia.");
         addMessage(10, 3, "Tämä on kymmenes thread Ohjelmointi-subforumissa.");
         addMessage(11, 2, "Tämä on yhdestoista thread Ohjelmointi-subforumissa.");
-        addMessage(8, 1, "You know it Juuso ;)");      
+        addMessage(8, 1, "You know it Juuso ;)");
         addMessage(8, 2, "Ryhmässä kannattaa miettiä myös työhön liittyviä tehtäviä sekä niiden jakamista ryhmän kesken, sekä tietysti sitä, että miten ohjelmakoodi saadaan jaettua kaikkien ryhmäläisten kesken niin, että jokainen pääsee kontribuoimaan siihen. Muutamia hyviä työvälineitä ovat esimerkiksi trello ja github. Varsinkin githubin käytön opettelusta on paljon hyötyä myös tulevaisuudessa.");
         addMessage(8, 4, "Juuso tässä, moi!");
         addMessage(8, 1, "Keskusteluun sopiva viesti");
