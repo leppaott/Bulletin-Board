@@ -37,7 +37,7 @@ public class BulletinBoard {
     }
 
     public void createTable(String table) throws SQLException {
-        database.update("CREATE TABLE IF NOT EXISTS " + table + ";"); //not sure why ?;" didn't work
+        database.update("CREATE TABLE " + table + ";"); //not sure why ?;" didn't work
     }
 
     public void dropTable(String table) throws SQLException {
@@ -62,13 +62,17 @@ public class BulletinBoard {
                     .collect(Collectors.toList());
         }
 
-        for (String statement : statements) {
-            try {
-                createTable(statement);
-            } catch (SQLException e) {
-
-            }
-        }
+//        for (String statement : statements) {
+//            try {
+//                createTable(statement);
+//            } catch (SQLException e) {
+//
+//            }
+//        }
+        database.update("CREATE TABLE Subforum (forumId SERIAL PRIMARY KEY, name text, postcount integer);");
+        database.update("CREATE TABLE Thread (threadId SERIAL PRIMARY KEY, forumId integer, sender integer, lastMessage integer, name text, dateTime Timestamp, postcount integer, FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), FOREIGN KEY(lastMessage) REFERENCES Message(messageId));");
+        database.update("CREATE TABLE Message (messageId SERIAL PRIMARY KEY, threadId integer, sender integer, 'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), FOREIGN KEY(sender) REFERENCES User(userId));");
+        database.update("CREATE TABLE User (userId SERIAL PRIMARY KEY, username text, joinDate Timestamp, postcount integer);");
 
         addUser("Arto");
         addUser("Matti");
