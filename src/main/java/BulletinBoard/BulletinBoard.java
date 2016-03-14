@@ -120,15 +120,15 @@ public class BulletinBoard {
     private List<String> getStatements() throws SQLException {
         List<String> statements = new ArrayList<>();
 
-        //statements.add("Subforum (forumId integer PRIMARY KEY, name text, postcount integer)");
-        //statements.add("Thread (threadId integer PRIMARY KEY, forumId integer, sender integer, "
-         //       + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
-         //       + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
-         //       + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId))");
-        //statements.add("Message (messageId integer PRIMARY KEY, threadId integer, sender integer, "
-        //        + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
-         //       + "FOREIGN KEY(sender) REFERENCES User(userId))");
-        statements.add("User (userId integer PRIMARY KEY, username text, joinDate timestamp without time zone, postcount integer)");
+        statements.add("Subforum (forumId integer PRIMARY KEY, name text, postcount integer)");
+        statements.add("Thread (threadId integer PRIMARY KEY, forumId integer, sender integer, "
+                + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
+                + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User_(userId), "
+                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId))");
+        statements.add("Message (messageId integer PRIMARY KEY, threadId integer, sender integer, "
+                + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
+                + "FOREIGN KEY(sender) REFERENCES User_(userId))");
+        statements.add("User_ (userId integer PRIMARY KEY, username text, joinDate timestamp without time zone, postcount integer)");
 
         return statements;
     }
