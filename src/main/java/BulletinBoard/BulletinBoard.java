@@ -120,7 +120,7 @@ public class BulletinBoard {
     private List<String> getStatements() throws SQLException {
         List<String> statements = new ArrayList<>();
 
-        statements.add("Subforum (forumId integer PRIMARY KEY, name text, postcount integer)");
+        //statements.add("Subforum (forumId integer PRIMARY KEY, name text, postcount integer)");
         //statements.add("Thread (threadId integer PRIMARY KEY, forumId integer, sender integer, "
          //       + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
          //       + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User(userId), "
