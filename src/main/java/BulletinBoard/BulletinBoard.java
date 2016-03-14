@@ -128,7 +128,7 @@ public class BulletinBoard {
         //statements.add("Message (messageId integer PRIMARY KEY, threadId integer, sender integer, "
         //        + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
          //       + "FOREIGN KEY(sender) REFERENCES User(userId))");
-        statements.add("User (userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer)");
+        statements.add("User (userId integer PRIMARY KEY, username text, joinDate timestamp without time zone, postcount integer)");
 
         return statements;
     }
