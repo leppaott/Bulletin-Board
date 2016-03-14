@@ -47,7 +47,7 @@ public class BulletinBoard {
     public void createDb() throws SQLException {
         List<String> statements = this.getStatements();
 
-        for (String table : Arrays.asList("Subforum", "Thread", "Message", "User")) {
+        for (String table : Arrays.asList("Subforum_", "Thread_", "Message_", "User_")) {
             try {
                 dropTable(table); //required for postgres
             } catch (SQLException e) {
@@ -120,15 +120,15 @@ public class BulletinBoard {
     private List<String> getStatements() throws SQLException {
         List<String> statements = new ArrayList<>();
 
-        statements.add("Subforum (forumId integer PRIMARY KEY, name text, postcount integer)");
-        statements.add("Thread (threadId integer PRIMARY KEY, forumId integer, sender integer, "
+        statements.add("Subforum_ (forumId integer PRIMARY KEY, name text, postcount integer)");
+        statements.add("Thread_ (threadId integer PRIMARY KEY, forumId integer, sender integer, "
                 + "lastMessage integer, name text, dateTime Timestamp, postcount integer, "
-                + "FOREIGN KEY(forumId) REFERENCES Subforum(forumId), FOREIGN KEY(sender) REFERENCES User_(userId), "
-                + "FOREIGN KEY(lastMessage) REFERENCES Message(messageId))");
-        statements.add("Message (messageId integer PRIMARY KEY, threadId integer, sender integer, "
-                + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread(threadId), "
+                + "FOREIGN KEY(forumId) REFERENCES Subforum_(forumId), FOREIGN KEY(sender) REFERENCES User_(userId), "
+                + "FOREIGN KEY(lastMessage) REFERENCES Message_(messageId))");
+        statements.add("Message_ (messageId integer PRIMARY KEY, threadId integer, sender integer, "
+                + "'order' integer, dateTime Timestamp, content text, FOREIGN KEY(threadId) REFERENCES Thread_(threadId), "
                 + "FOREIGN KEY(sender) REFERENCES User_(userId))");
-        statements.add("User_ (userId integer PRIMARY KEY, username text, joinDate timestamp without time zone, postcount integer)");
+        statements.add("User_ (userId integer PRIMARY KEY, username text, joinDate Timestamp, postcount integer)");
 
         return statements;
     }
