@@ -59,6 +59,8 @@ public class BulletinBoard {
             statements = statements.stream()
                     .map(s -> ((String) s)
                             .replace("integer PRIMARY", "SERIAL PRIMARY"))
+                    .map(s -> ((String) s)
+                            .replace("Timestamp", "timestamp without time zone"))
                     .collect(Collectors.toList());
         }
 
